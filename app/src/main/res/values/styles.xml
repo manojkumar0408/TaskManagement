@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="RobotoBlackItalic40">
+        <item name="fontFamily">@font/roboto_black_italic</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+
+    <style name="RobotoBlackItalic28">
+        <item name="fontFamily">@font/roboto_black_italic</item>
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="RobotoBlackItalic20">
+        <item name="fontFamily">@font/roboto_black_italic</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="RobotoBoldItalic16">
+        <item name="fontFamily">@font/roboto_black_italic</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="RobotoBoldItalic12">
+        <item name="fontFamily">@font/roboto_black_italic</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="RobotoBoldItalic20">
+        <item name="fontFamily">@font/roboto_bold_italic</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="RobotoBlack24">
+        <item name="fontFamily">@font/roboto_black</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="RobotoBold18">
+        <item name="fontFamily">@font/roboto_black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="RobotoRegular14">
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="RobotoRegular16">
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.App.CornerSize10Percent" parent="">
+        <item name="cornerSize">10%</item>
+    </style>
+</resources>

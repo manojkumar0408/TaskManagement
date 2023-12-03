@@ -14,8 +14,21 @@
 
         <!-- Secondary variant color -->
         <color name="secondary_variant">#FF018786</color> <!-- A darker shade of teal -->
+        <color name="transparent_light">#E14E7E95</color>
 
         <!-- Other colors... -->
-
+    <color name="white_66">#A8FFFFFF</color>
+    <color name="white_33">#54FFFFFF</color>
+    <color name="logo_green">#00A651</color>
+    <color name="dark_green">#143C02</color>
+    <color name="green">#2B710B</color>
+    <color name="light_green">#D2FFE8</color>
+    <color name="grey">#6A6666</color>
+    <color name="light_grey">#C6C6C6</color>
+    <color name="light_blue">#F2F2FA</color>
+    <color name="blue">#466FFF</color>
+    <color name="bg_grey">#E5E5E5</color>
+    <color name="violet">#A684EE</color>
+    <color name="light_violet">#F2E1FF</color>
 
 </resources>

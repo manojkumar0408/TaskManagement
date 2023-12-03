@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -15,6 +16,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_page)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         auth = Firebase.auth
         val email = findViewById<TextInputLayout>(R.id.emailAddress)
@@ -22,15 +24,13 @@ class LoginActivity : AppCompatActivity() {
         val signup = findViewById<Button>(R.id.signup)
         val login = findViewById<Button>(R.id.login)
 
-        signup.setOnClickListener{
-            signup(email.editText?.text.toString(),password.editText?.text.toString())
+        signup.setOnClickListener {
+            signup(email.editText?.text.toString(), password.editText?.text.toString())
         }
 
-        login.setOnClickListener{
-            login(email.editText?.text.toString(),password.editText?.text.toString())
+        login.setOnClickListener {
+            login(email.editText?.text.toString(), password.editText?.text.toString())
         }
-
-
     }
 
 
@@ -42,39 +42,36 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun signup(email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    Toast.makeText(this, "Welcome ${user?.email}", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, MainActivity::class.java))
-                } else {
-                    Toast.makeText(
-                        baseContext,
-                        "Authentication failed.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                val user = auth.currentUser
+                Toast.makeText(this, "Welcome ${user?.email}", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, TasksMainActivity::class.java))
+            } else {
+                Toast.makeText(
+                    baseContext,
+                    "Authentication failed.",
+                    Toast.LENGTH_SHORT,
+                ).show()
             }
+        }
     }
 
     private fun login(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    Toast.makeText(this, "Welcome ${user?.email}", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, MainActivity::class.java))
-                } else {
-                    Toast.makeText(
-                        baseContext,
-                        "Authentication failed.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                val user = auth.currentUser
+                Toast.makeText(this, "Welcome ${user?.email}", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, TasksMainActivity::class.java))
+            } else {
+                Toast.makeText(
+                    baseContext,
+                    "Authentication failed.",
+                    Toast.LENGTH_SHORT,
+                ).show()
             }
+        }
     }
-
 
 
 }
