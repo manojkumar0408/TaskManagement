@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:elevation="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+        <ImageView
+            android:id="@+id/imageDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:src="@android:drawable/ic_menu_delete"
+            android:contentDescription="Delete Icon"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Task Title"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/textDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textTitle"
+            android:text="Task Description"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"/>
+
+        <TextView
+            android:id="@+id/textDueDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textDescription"
+            android:text="Due Date: 12/31/2023"
+            android:textSize="14sp"
+            android:textColor="@android:color/holo_red_dark"
+            android:layout_marginTop="8dp"/>
+
+
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
