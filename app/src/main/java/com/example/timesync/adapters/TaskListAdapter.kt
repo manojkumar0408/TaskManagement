@@ -15,7 +15,8 @@ import com.example.timesync.db.Task
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
-class TaskListAdapter(private val onDeleteClickListener: (Task) -> Unit) : ListAdapter<Task, TaskListAdapter.ViewHolder>(TaskDiffCallback()) {
+class TaskListAdapter(private val onDeleteClickListener: (Task) -> Unit) :
+    ListAdapter<Task, TaskListAdapter.ViewHolder>(TaskDiffCallback()) {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.textTitle)
         val descriptionTextView: TextView = itemView.findViewById(R.id.textDescription)
@@ -39,7 +40,7 @@ class TaskListAdapter(private val onDeleteClickListener: (Task) -> Unit) : ListA
             holder.dueDateTextView.text = "Due Date: ${dateTime[0]} ${dateTime[1]}"
         }
         holder.deleteImageView.setOnClickListener {
-            Log.i("clicked","adapter")
+            Log.i("clicked", "adapter")
             onDeleteClickListener.invoke(currentTask)
         }
     }

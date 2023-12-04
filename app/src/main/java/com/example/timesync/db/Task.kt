@@ -12,7 +12,6 @@ data class Task(
     var status: String,
     var dueDate: Long,
     var category: String // Foreign key linking to Category
-
 ) {
 
 }

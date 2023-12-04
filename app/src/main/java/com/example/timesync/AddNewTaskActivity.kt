@@ -107,6 +107,7 @@ class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetList
         } else {
             radioChoice = "High"
             task = Task(2, title, description, radioChoice!!, "college", 0L, "college")
+
         }
         val repository = TaskRepository(application)
         repository.insert(

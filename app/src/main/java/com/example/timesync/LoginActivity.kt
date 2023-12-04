@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+
+import com.example.timesync.ui.SignUpActivity
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -25,11 +27,21 @@ class LoginActivity : AppCompatActivity() {
         val login = findViewById<Button>(R.id.login)
 
         signup.setOnClickListener {
-            signup(email.editText?.text.toString(), password.editText?.text.toString())
+            val signUpIntent = Intent(this, SignUpActivity::class.java)
+            startActivity(signUpIntent)
+
         }
 
         login.setOnClickListener {
-            login(email.editText?.text.toString(), password.editText?.text.toString())
+            //login(email.editText?.text.toString(), password.editText?.text.toString())
+            val userEmail = email.editText?.text.toString()
+            val userPassword = password.editText?.text.toString()
+
+            if (!userEmail.isNullOrEmpty() && !userPassword.isNullOrEmpty()) {
+                login(userEmail, userPassword)
+            } else {
+                Toast.makeText(this, "Email and Password can't be blank", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
