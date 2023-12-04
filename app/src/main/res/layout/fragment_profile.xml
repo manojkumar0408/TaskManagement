@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".ui.ProfilePicture">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        tools:context=".MainActivity">
+        <!--android:background="@drawable/background"-->
+
+        <com.example.timesync.ui.ProfileIconClass
+            android:id="@+id/profileIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:src="@drawable/person" />
+
+        <ImageButton
+            android:id="@+id/camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/profileIcon"
+            android:layout_alignBottom="@id/profileIcon"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_camera" />
+
+        <!--View
+            android:id="@+id/click_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/btncamera"
+            android:layout_alignTop="@id/btncamera"
+            android:layout_alignEnd="@id/btncamera"
+            android:layout_alignBottom="@id/btncamera"
+            android:clickable="true"
+            android:focusable="true" /-->
+
+        <!--TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Profile"
+            android:textSize="80px"
+            android:textColor="#d3d8e3"
+            android:layout_alignParentTop = "true"
+            android:layout_centerHorizontal = "true"
+            android:layout_marginTop="450px" /-->
+
+        <EditText
+            android:id="@+id/user1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="250dp"
+            android:layout_marginRight="40dp"
+            android:drawableStart="@drawable/ic_person"
+            android:drawablePadding="5dp"
+            android:gravity="start"
+            android:hint="username"
+            android:inputType="text"
+            android:textColorHint="#8e9094"
+            android:textCursorDrawable="@null" />
+
+        <EditText
+            android:id="@+id/email1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="320dp"
+            android:layout_marginRight="40dp"
+            android:drawableStart="@drawable/ic_email"
+            android:drawablePadding="5dp"
+            android:gravity="start"
+            android:hint="email"
+            android:inputType="textEmailAddress"
+            android:textColorHint="#8e9094"
+            android:textCursorDrawable="@null" />
+
+
+        <EditText
+            android:id="@+id/fname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="390dp"
+            android:layout_marginRight="40dp"
+            android:drawableStart="@drawable/ic_edit"
+            android:drawablePadding="5dp"
+            android:gravity="start"
+            android:hint="First name"
+            android:inputType="text"
+            android:textColorHint="#8e9094"
+            android:textCursorDrawable="@null" />
+
+        <EditText
+            android:id="@+id/lname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="460dp"
+            android:layout_marginRight="40dp"
+            android:drawableStart="@drawable/ic_edit"
+            android:drawablePadding="5dp"
+            android:gravity="start"
+            android:hint="Last name"
+            android:inputType="text"
+            android:textColorHint="#8e9094"
+            android:textCursorDrawable="@null" />
+
+        <Button
+            android:id="@+id/create"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="550dp"
+            android:layout_marginRight="40dp"
+            android:gravity="center"
+            android:text="SAVE"
+            android:textAllCaps="false"
+            android:textColor="#d3d8e3"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/data"
+            android:layout_width="wrap_content"
+            android:layout_height="23dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="650dp"
+            android:focusable="true"
+            android:fontFamily="sans-serif"
+            android:text="Time Sync"
+            android:textColor="#d3d8e3"
+            android:textSize="12dp" />
+
+    </RelativeLayout>
+
+</ScrollView>
