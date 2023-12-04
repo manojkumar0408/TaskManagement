@@ -5,5 +5,257 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/task_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_size_10"
+        android:hint="@string/task_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/task_title_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/task_description_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_size_10"
+        android:hint="@string/task_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/task_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/task_desc_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+        android:id="@+id/text_view_priority"
+        style="@style/RobotoBold18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_size_16"
+        android:text="@string/priority"
+        android:textColor="@color/green"
+        app:layout_constraintStart_toStartOf="@id/task_description_tv"
+        app:layout_constraintTop_toBottomOf="@id/task_description_tv" />
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_size_16"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/text_view_priority"
+        app:layout_constraintTop_toBottomOf="@id/text_view_priority">
+
+        <RadioButton
+            android:id="@+id/radio_priority_none"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="25"
+            android:buttonTint="#808080"
+            android:text="@string/none" />
+
+        <RadioButton
+            android:id="@+id/radio_priority_low"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="25"
+            android:buttonTint="#4CAF50"
+            android:checked="true"
+            android:text="@string/low" />
+
+        <RadioButton
+            android:id="@+id/radio_priority_medium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="25"
+            android:buttonTint="#FFC107"
+            android:text="@string/medium" />
+
+        <RadioButton
+            android:id="@+id/radio_priority_high"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="25"
+            android:buttonTint="#E91E63"
+            android:text="@string/high"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/radio_priority_medium"
+            app:layout_constraintTop_toTopOf="parent" />
+    </RadioGroup>
+
+
+    <TextView
+        android:id="@+id/due_date"
+        style="@style/RobotoBold18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_size_16"
+        android:text="@string/due_date"
+        android:textColor="@color/green"
+        app:layout_constraintStart_toStartOf="@id/text_view_priority"
+        app:layout_constraintTop_toBottomOf="@id/radio_group" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/time_date_constraint_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_size_16"
+        app:layout_constraintTop_toBottomOf="@id/due_date">
+
+        <ImageView
+            android:id="@+id/ic_access_time_black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_view_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/task_date"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ic_access_time_black"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_view_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="60dp"
+            android:text="@string/task_time"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/delete_datetime_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.52" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/recurring_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/time_date_constraint_layout">
+
+        <CheckBox
+            android:id="@+id/checkMon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mon"
+            app:layout_constraintEnd_toStartOf="@id/checkTue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/checkTue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tue"
+            app:layout_constraintEnd_toStartOf="@id/checkWed"
+            app:layout_constraintStart_toEndOf="@id/checkMon"
+            app:layout_constraintTop_toTopOf="@id/checkMon" />
+
+        <CheckBox
+            android:id="@+id/checkWed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/checkTue"
+            app:layout_constraintTop_toTopOf="@id/checkMon" />
+
+        <CheckBox
+            android:id="@+id/checkThu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thu"
+            app:layout_constraintEnd_toStartOf="@id/checkFri"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/checkMon" />
+
+        <CheckBox
+            android:id="@+id/checkFri"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fri"
+            app:layout_constraintEnd_toStartOf="@id/checkSat"
+            app:layout_constraintStart_toEndOf="@id/checkThu"
+            app:layout_constraintTop_toTopOf="@id/checkThu" />
+
+        <CheckBox
+            android:id="@+id/checkSat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sat"
+            app:layout_constraintEnd_toStartOf="@id/checkSun"
+            app:layout_constraintStart_toEndOf="@id/checkFri"
+            app:layout_constraintTop_toTopOf="@id/checkThu" />
+
+        <CheckBox
+            android:id="@+id/checkSun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sun"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/checkSat"
+            app:layout_constraintTop_toTopOf="@id/checkThu" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Spinner
+        android:id="@+id/categories_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_size_16"
+        app:layout_constraintEnd_toEndOf="@id/time_date_constraint_layout"
+        app:layout_constraintStart_toStartOf="@+id/time_date_constraint_layout"
+        app:layout_constraintTop_toBottomOf="@id/time_date_constraint_layout" />
+
+    <Button
+        android:id="@+id/save_task_btn"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_size_16"
+        android:backgroundTint="@color/primary"
+        android:text="@string/add_task"
+        app:layout_constraintTop_toBottomOf="@id/categories_spinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
