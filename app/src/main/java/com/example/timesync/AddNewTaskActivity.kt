@@ -1,11 +1,15 @@
 package com.example.timesync
 
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.AlarmManager.*
 import android.app.DatePickerDialog.OnDateSetListener
+import android.app.PendingIntent
 import android.app.TimePickerDialog.OnTimeSetListener
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.DatePicker
-import android.widget.RadioGroup
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +17,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.timesync.Fragments.DatePickerFragment
 import com.example.timesync.Fragments.TimePickerFragment
+import com.example.timesync.alarm.AlertReceiver
 import com.example.timesync.databinding.ActivityAddNewTaskBinding
 import com.example.timesync.db.Task
 import com.example.timesync.db.TaskRepository
@@ -21,6 +26,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import kotlin.math.abs
 
 
 class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetListener {
@@ -49,7 +55,7 @@ class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetList
     }
 
     private fun initialise() {
-
+        radioChoice = "Low"
     }
 
     private fun setListeners() {
@@ -75,7 +81,6 @@ class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetList
             } else {
                 "High"
             }
-            Toast.makeText(applicationContext, radioChoice.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -84,8 +89,6 @@ class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetList
         val description: String = binding.taskDescEditText.text.toString()
         val date: String = binding.textViewDate.text.toString()
         val time: String = binding.textViewTime.text.toString()
-
-//        val category: String = categoriesSpinner.getSelectedItem().toString()
 
         if (title.trim { it <= ' ' }.isEmpty()) {
             Toast.makeText(this, "Please insert a Title", Toast.LENGTH_SHORT).show()
@@ -99,21 +102,25 @@ class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetList
     }
 
     private fun insertData(title: String, description: String, date: String, time: String) {
-        var timeMillis: Long?
+        var timeMillis: Long? = null
+        val id = abs((0..999999999999).random())
         var task: Task?
-        if (!(date == "No date" && time == "No time") && radioChoice != null) {
+        if (date != application.getString(R.string.task_date) && time != application.getString(R.string.task_time) && radioChoice != null) {
             timeMillis = parseDate(date, time)
-            task = Task(2, title, description, radioChoice!!, "college", timeMillis, "college")
+            task = Task(id, title, description, radioChoice!!, "college", timeMillis, "college")
         } else {
-            radioChoice = "High"
-            task = Task(2, title, description, radioChoice!!, "college", 0L, "college")
-
+            task = Task(id, title, description, radioChoice!!, "college", 0L, "college")
         }
         val repository = TaskRepository(application)
         repository.insert(
             task
         ) { result ->
             newTaskID = result
+            Toast.makeText(applicationContext, "Task Saved", Toast.LENGTH_SHORT).show()
+            if (timeMillis != null) {
+                parseDate(date, time)
+                startAlarm(id, title, description, radioChoice, "college", timeMillis, "college")
+            }
             finish()
         }
     }
@@ -151,8 +158,6 @@ class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetList
         hour = Integer.valueOf(split[0])
         minute = Integer.valueOf(split[1])
         val cal = Calendar.getInstance()
-        //        cal.setTimeInMillis(System.currentTimeMillis());
-//        cal.clear();
         cal[Calendar.YEAR] = 2000 + year?.toInt()!!
         cal[Calendar.MONTH] = month?.toInt()!! - 1
         cal[Calendar.DATE] = this.day?.toInt()!!
@@ -160,5 +165,29 @@ class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetList
         cal[Calendar.MINUTE] = minute
         cal[Calendar.SECOND] = 0
         return cal.timeInMillis
+    }
+
+    @SuppressLint("ScheduleExactAlarm")
+    fun startAlarm(
+        id: Long,
+        title: String?,
+        description: String?,
+        priority: String?,
+        status: String?,
+        timeMillis: Long,
+        category: String?
+    ) {
+        val alertIntent = Intent(this, AlertReceiver::class.java)
+        alertIntent.putExtra(Constants.ID, id)
+        alertIntent.putExtra(Constants.TITLE, title)
+        alertIntent.putExtra(Constants.DESCRIPTION, description)
+        alertIntent.putExtra(Constants.PRIORITY, priority)
+        alertIntent.putExtra(Constants.EXTRA_ALERTMILLI, timeMillis)
+        alertIntent.putExtra(Constants.STATUS, status)
+        alertIntent.putExtra(Constants.CATEGORY, category)
+        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        val pendingIntent =
+            PendingIntent.getBroadcast(this, 1, alertIntent, PendingIntent.FLAG_MUTABLE)
+        alarmManager.setExact(RTC_WAKEUP, timeMillis, pendingIntent)
     }
 }
