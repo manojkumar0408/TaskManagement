@@ -19,24 +19,23 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_page)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
         auth = Firebase.auth
+
+        if (checkUserSignedIn()) {
+            val signUpIntent = Intent(this, TasksMainActivity::class.java)
+            startActivity(signUpIntent)
+        } else {
+            val signUpIntent = Intent(this, LoginActivity::class.java)
+            startActivity(signUpIntent)
+        }
         val email = findViewById<TextInputLayout>(R.id.emailAddress)
         val password = findViewById<TextInputLayout>(R.id.password)
         val signup = findViewById<Button>(R.id.signup)
         val login = findViewById<Button>(R.id.login)
 
-        //var userInfo = SharedPref.UserInfo("","","","")
-        //val SharedPref = SharedPref()
-        //userInfo = SharedPref.getUserInfo(this)
-        //if (userInfo.email==""){
-
-        //}
-
         signup.setOnClickListener {
             val signUpIntent = Intent(this, SignUpActivity::class.java)
             startActivity(signUpIntent)
-
         }
 
         login.setOnClickListener {
@@ -53,11 +52,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    private fun checkUserSignedIn() {
+    private fun checkUserSignedIn(): Boolean {
         val currentUser = auth.currentUser
-        if (currentUser == null) {
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
+        return currentUser != null
     }
 
     private fun signup(email: String, password: String) {

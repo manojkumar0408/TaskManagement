@@ -49,6 +49,8 @@ class TasksMainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+    }
 //
 //        val spinner: Spinner = findViewById(R.id.spinnerPriorityFilter)
 //        ArrayAdapter.createFromResource(
@@ -59,7 +61,7 @@ class TasksMainActivity : AppCompatActivity() {
 //            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 //            spinner.adapter = adapter
 //        }
- //       val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+    //       val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 //        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 //            override fun onItemSelected(
 //                parent: AdapterView<*>,
@@ -77,15 +79,13 @@ class TasksMainActivity : AppCompatActivity() {
 //            }
 //        }
 
-        fun onCreateOptionsMenu(menu: Menu): Boolean {
-            // Inflate the menu; this adds items to the action bar if it is present.
-            menuInflater.inflate(R.menu.tasks_main, menu)
-            return true
-        }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.tasks_main, menu)
+        return true
+    }
 
-        fun onSupportNavigateUp(): Boolean {
-            val navController = findNavController(R.id.nav_host_fragment_content_main)
-            return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }

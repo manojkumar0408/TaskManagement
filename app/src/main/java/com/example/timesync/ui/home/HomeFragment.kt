@@ -2,6 +2,7 @@ package com.example.timesync.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.example.timesync.AddNewTaskActivity
 import com.example.timesync.LoginActivity
 import com.example.timesync.R
 import com.example.timesync.databinding.FragmentHomeBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class HomeFragment : Fragment() {
 

@@ -1,10 +1,13 @@
 package com.example.timesync.alarm
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.timesync.AddNewTaskActivity
 import com.example.timesync.Constants
@@ -14,6 +17,7 @@ import java.net.IDN
 
 class AlertReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        Log.i("actionss", "alert")
         val id = intent.getLongExtra(Constants.ID, -1)
         val title = intent.getStringExtra(Constants.TITLE)
         val description = intent.getStringExtra(Constants.DESCRIPTION)
@@ -45,6 +49,8 @@ class AlertReceiver : BroadcastReceiver() {
         taskStatus: String?,
         category: String?
     ) {
+        Log.i("actionss", "notification")
+
         val intent = Intent(context, AddNewTaskActivity::class.java)
         intent.putExtra(Constants.ID, id)
         intent.putExtra(Constants.TITLE, title)
@@ -73,10 +79,10 @@ class AlertReceiver : BroadcastReceiver() {
         secondAction.putExtra(Constants.CATEGORY, category)
         secondAction.putExtra("action", "postpone")
         val firstActionPendingIntent = PendingIntent.getBroadcast(
-            context, 1, firstAction, PendingIntent.FLAG_UPDATE_CURRENT
+            context, 1, firstAction, PendingIntent.FLAG_IMMUTABLE
         )
         val secondActionPendingIntent = PendingIntent.getBroadcast(
-            context, 2, secondAction, PendingIntent.FLAG_UPDATE_CURRENT
+            context, 2, secondAction, PendingIntent.FLAG_IMMUTABLE
         )
 
 //        Intent dialog = new Intent(context, MainActivity.class);
@@ -85,23 +91,40 @@ class AlertReceiver : BroadcastReceiver() {
 //        PendingIntent postPoneIntent = PendingIntent.getActivity(context, 0,
 //                dialog, 0);
         val notificationIntent = PendingIntent.getActivity(
-            context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            context, 0, intent, PendingIntent.FLAG_IMMUTABLE
         )
         val nb: NotificationCompat.Builder =
             NotificationCompat.Builder(context, TImeSyncApplication.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_menu_gallery).setContentTitle(title).setTicker(msgAlert)
                 .setContentText(contentText).setPriority(NotificationCompat.PRIORITY_HIGH)
-//                .addAction(R.drawable.ic_calendar, "ongoing", firstActionPendingIntent).addAction(
-//                    R.drawable.ic_menu_slideshow,
-//                    "postpone by 10 minutes",
-//                    secondActionPendingIntent
-//                )
+                .addAction(R.drawable.ic_calendar, "ongoing", firstActionPendingIntent).addAction(
+                    R.drawable.ic_menu_slideshow,
+                    "postpone by 10 minutes",
+                    secondActionPendingIntent
+                )
+
         nb.setContentIntent(notificationIntent)
         nb.setDefaults(NotificationCompat.DEFAULT_SOUND)
         nb.setAutoCancel(true)
+
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        createNotificationChannel(notificationManager)
+
         notificationManager.notify(TAG, id.toInt(), nb.build())
+    }
+
+
+    private fun createNotificationChannel(notificationManager: NotificationManager) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                TImeSyncApplication.CHANNEL_ID,
+                "taskAlert",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 
     companion object {

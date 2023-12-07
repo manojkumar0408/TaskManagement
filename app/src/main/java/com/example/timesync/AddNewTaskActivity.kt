@@ -1,15 +1,13 @@
 package com.example.timesync
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
-import android.app.AlarmManager.*
-import android.app.DatePickerDialog.OnDateSetListener
+import android.app.AlarmManager.RTC_WAKEUP
 import android.app.PendingIntent
 import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -22,14 +20,14 @@ import com.example.timesync.databinding.ActivityAddNewTaskBinding
 import com.example.timesync.db.Task
 import com.example.timesync.db.TaskRepository
 import com.example.timesync.ui.TaskActivityViewModel
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
+import java.util.Locale
 import kotlin.math.abs
 
 
-class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetListener {
+class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetListener,
+    OnTimeSetListener {
 
     private lateinit var binding: ActivityAddNewTaskBinding
     private lateinit var taskActivityViewModel: TaskActivityViewModel
@@ -60,8 +58,7 @@ class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetList
 
     private fun setListeners() {
         binding.textViewDate.setOnClickListener {
-            val datePicker: DialogFragment = DatePickerFragment()
-            datePicker.show(supportFragmentManager, "date picker")
+            showDataPicker()
         }
         binding.textViewTime.setOnClickListener {
             val datePicker: DialogFragment = TimePickerFragment()
@@ -82,6 +79,12 @@ class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetList
                 "High"
             }
         }
+    }
+
+    private fun showDataPicker() {
+        val datePickerFragment = DatePickerFragment()
+        datePickerFragment.setOnDateSetListener(this)
+        datePickerFragment.show(supportFragmentManager, "datePicker")
     }
 
     private fun saveTaskClicked() {
@@ -106,7 +109,7 @@ class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetList
         val id = abs((0..999999999999).random())
         var task: Task?
         if (date != application.getString(R.string.task_date) && time != application.getString(R.string.task_time) && radioChoice != null) {
-            timeMillis = parseDate(date, time)
+            timeMillis = convertTimeInMillis()
             task = Task(id, title, description, radioChoice!!, "college", timeMillis, "college")
         } else {
             task = Task(id, title, description, radioChoice!!, "college", 0L, "college")
@@ -118,21 +121,10 @@ class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetList
             newTaskID = result
             Toast.makeText(applicationContext, "Task Saved", Toast.LENGTH_SHORT).show()
             if (timeMillis != null) {
-                parseDate(date, time)
+                convertTimeInMillis()
                 startAlarm(id, title, description, radioChoice, "college", timeMillis, "college")
             }
             finish()
-        }
-    }
-
-    override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-        cal[Calendar.YEAR] = p1
-        cal[Calendar.MONTH] = p1
-        cal[Calendar.DAY_OF_MONTH] = p3
-        val currentDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(cal.time)
-        if (!currentDateString.isEmpty()) {
-            binding.textViewDate.text = currentDateString
-            binding.deleteDatetimeButton.visibility = View.VISIBLE
         }
     }
 
@@ -144,30 +136,41 @@ class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetList
         binding.deleteDatetimeButton.visibility = View.VISIBLE
     }
 
-    private fun parseDate(date: String?, time: String?): Long {
-        if (date == null && time == null) {
-            return 0L
-        }
-        val sdfYear = SimpleDateFormat("yy")
-        val sdfMonth = SimpleDateFormat("MM")
-        val sdfDay = SimpleDateFormat("dd")
-        val split = time!!.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        year = sdfYear.format(Date.parse(date))
-        month = sdfMonth.format(Date.parse(date))
-        day = sdfDay.format(Date.parse(date))
-        hour = Integer.valueOf(split[0])
-        minute = Integer.valueOf(split[1])
-        val cal = Calendar.getInstance()
-        cal[Calendar.YEAR] = 2000 + year?.toInt()!!
-        cal[Calendar.MONTH] = month?.toInt()!! - 1
-        cal[Calendar.DATE] = this.day?.toInt()!!
-        cal[Calendar.HOUR_OF_DAY] = hour
-        cal[Calendar.MINUTE] = minute
-        cal[Calendar.SECOND] = 0
-        return cal.timeInMillis
+    private fun convertTimeInMillis(): Long {
+        val selectedDate = binding.textViewDate.text.toString()
+        val selectedTime = binding.textViewTime.text.toString()
+
+        // Parse the selected date
+        val dateParts = selectedDate.split("-")
+        val year = dateParts[0].toInt()
+        val month = dateParts[1].toInt() - 1 // Calendar months are 0-based
+        val dayOfMonth = dateParts[2].toInt()
+
+        // Parse the selected time
+        val timeParts = selectedTime.split(":")
+        val hour = timeParts[0].toInt()
+        val minute = timeParts[1].toInt()
+
+        Log.d(
+            "Converted Time in millis",
+            convertToMillis(year, month, dayOfMonth, hour, minute).toString()
+        )
+        return convertToMillis(year, month, dayOfMonth, hour, minute)
     }
 
-    @SuppressLint("ScheduleExactAlarm")
+    private fun convertToMillis(year: Int, month: Int, day: Int, hour: Int, minute: Int): Long {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month)
+        calendar.set(Calendar.DAY_OF_MONTH, day)
+        calendar.set(Calendar.HOUR_OF_DAY, hour)
+        calendar.set(Calendar.MINUTE, minute)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+
+        return calendar.timeInMillis
+    }
+
     fun startAlarm(
         id: Long,
         title: String?,
@@ -177,6 +180,7 @@ class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetList
         timeMillis: Long,
         category: String?
     ) {
+        Log.i("actionss", "satarrt")
         val alertIntent = Intent(this, AlertReceiver::class.java)
         alertIntent.putExtra(Constants.ID, id)
         alertIntent.putExtra(Constants.TITLE, title)
@@ -186,8 +190,30 @@ class AddNewTaskActivity : AppCompatActivity(), OnDateSetListener, OnTimeSetList
         alertIntent.putExtra(Constants.STATUS, status)
         alertIntent.putExtra(Constants.CATEGORY, category)
         val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-        val pendingIntent =
-            PendingIntent.getBroadcast(this, 1, alertIntent, PendingIntent.FLAG_MUTABLE)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this, 1, alertIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
         alarmManager.setExact(RTC_WAKEUP, timeMillis, pendingIntent)
+
     }
+
+
+    override fun onDateSet(year: Int, month: Int, dayOfMonth: Int) {
+        val selectedDate = Calendar.getInstance()
+        selectedDate.set(year, month, dayOfMonth)
+        val formattedDate = formatDate(selectedDate)
+        binding.textViewDate.text = "$formattedDate"
+    }
+
+    private fun formatDate(date: Calendar): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(date.time)
+    }
+
+//    private fun formatTime(time: String): String {
+//        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+//        return timeFormat.format(time.time)
+//    }
+
+
 }

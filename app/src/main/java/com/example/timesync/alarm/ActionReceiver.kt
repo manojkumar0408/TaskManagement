@@ -4,14 +4,13 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.example.timesync.Constants
 import java.util.Calendar
 
-/*
-Wrapper for our applications that starts before Main Activity and creates notification channels
- */
 class ActionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        Log.i("actionss","received")
         val notificationManager = context
             .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val id = intent.getLongExtra(Constants.ID, -1)

@@ -9,12 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.View.OnClickListener
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.timesync.R
 import com.example.timesync.databinding.FragmentProfileBinding
 
-class ProfilePicture : AppCompatActivity() {
+class ProfilePictureClass : AppCompatActivity() {
 
     private lateinit var binding: FragmentProfileBinding
     private val IMAGE_PICK_CODE = 1000
@@ -25,7 +26,8 @@ class ProfilePicture : AppCompatActivity() {
         setContentView(R.layout.fragment_profile)
         binding = FragmentProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.camera.setOnClickListener  {
+        binding.create.setOnClickListener {
+            Toast.makeText(applicationContext, "clicked", Toast.LENGTH_SHORT).show()
             if (checkPermission()) {
                 pickImageFromGallery()
             } else {
@@ -46,7 +48,6 @@ class ProfilePicture : AppCompatActivity() {
         )
     }
 
-    // Handle permission request result
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray,
     ) {
