@@ -26,6 +26,7 @@ class TaskDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityTaskDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         notesText = findViewById(R.id.notes_text)
         descriptionTextView = findViewById(R.id.task_description_tv)
         dueDateTextView = findViewById(R.id.set_date_time_tv)
@@ -76,5 +77,10 @@ class TaskDetailActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         speechRecognizer.destroy()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

@@ -30,5 +30,12 @@
     <color name="bg_grey">#E5E5E5</color>
     <color name="violet">#A684EE</color>
     <color name="light_violet">#F2E1FF</color>
+    <color name="deepRed">#de0b27</color>
+    <color name="MediumRed">#ad182c</color>
+    <color name="LightRed">#822330</color>
+    <color name="deepBlue">#02c6f7</color>
+    <color name="MediumBlue">#2f889e</color>
+    <color name="LightBlue">#55a2b5</color>
+    <color name="LighterRed">#ff9999</color>
 
 </resources>

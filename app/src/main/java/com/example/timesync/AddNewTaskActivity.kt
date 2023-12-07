@@ -10,7 +10,9 @@ import android.util.Log
 import android.view.View
 import android.widget.TimePicker
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.timesync.Fragments.DatePickerFragment
@@ -29,6 +31,7 @@ import kotlin.math.abs
 class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetListener,
     OnTimeSetListener {
 
+    //private lateinit var appBar: ActionBar
     private lateinit var binding: ActivityAddNewTaskBinding
     private lateinit var taskActivityViewModel: TaskActivityViewModel
     private val cal = Calendar.getInstance()
@@ -46,10 +49,23 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         super.onCreate(savedInstanceState)
         binding = ActivityAddNewTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayShowHomeEnabled(true);
+        supportActionBar?.setTitle("Add New Task")
+        // Get support action bar
+        //appBar = supportActionBar?
+        //appBar.title="Add New Task"
 
         taskActivityViewModel = ViewModelProvider(this)[TaskActivityViewModel::class.java]
         initialise()
         setListeners()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun initialise() {

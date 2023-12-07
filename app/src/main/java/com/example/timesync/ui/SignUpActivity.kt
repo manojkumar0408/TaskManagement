@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import com.example.timesync.R
 import com.example.timesync.SharedPref
 import com.example.timesync.TasksMainActivity
@@ -16,10 +17,17 @@ import com.google.firebase.auth.auth
 
 class SignUpActivity : AppCompatActivity() {
 
+    private lateinit var appBar: ActionBar
     private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayShowHomeEnabled(true);
+        // Get support action bar
+        appBar = supportActionBar!!
+        appBar.title="Sign Up"
         auth = Firebase.auth
         val email = findViewById<EditText>(R.id.email1)
         val fname = findViewById<EditText>(R.id.fname)

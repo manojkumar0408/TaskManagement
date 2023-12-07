@@ -1,11 +1,16 @@
 package com.example.timesync
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -22,6 +27,7 @@ import com.example.timesync.ui.home.HomeViewModel
 
 class TasksMainActivity : AppCompatActivity() {
 
+    //private lateinit var appBar: ActionBar
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityTasksMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +38,11 @@ class TasksMainActivity : AppCompatActivity() {
 
 
         setSupportActionBar(binding.appBarTasksMain.toolbar)
-
+        //supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        //supportActionBar?.setDisplayShowHomeEnabled(true);
+        // Get support action bar
+        //appBar = supportActionBar!!
+        //appBar.title="My Tasks"
         binding.appBarTasksMain.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
@@ -81,7 +91,31 @@ class TasksMainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.tasks_main, menu)
+
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_logout -> {
+                clearSharedPreferences()
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun clearSharedPreferences() {
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove("KEY_USERNAME")
+        editor.remove("KEY_FIRST_NAME")
+        editor.remove("KEY_LAST_NAME")
+        editor.remove("KEY_EMAIL")
+        editor.apply()
+        Toast.makeText(this, "Logout successful", Toast.LENGTH_SHORT).show()
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.widget.*
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.timesync.db.Task
@@ -16,6 +17,7 @@ import java.util.Locale
 
 class EditTaskActivity : AppCompatActivity() {
 
+    private lateinit var appBar: ActionBar
     private lateinit var editTextTitle: EditText
     private lateinit var editTextDescription: EditText
     private lateinit var radioGroupPriority: RadioGroup
@@ -35,6 +37,11 @@ class EditTaskActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_task)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayShowHomeEnabled(true);
+        // Get support action bar
+        appBar = supportActionBar!!
+        appBar.title="Edit Task"
 
         taskId = intent.getLongExtra("taskId", -1L)
         if (taskId == -1L) {
@@ -149,5 +156,9 @@ class EditTaskActivity : AppCompatActivity() {
         return format.parse("$dateStr $timeStr")?.time ?: System.currentTimeMillis()
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 
 }

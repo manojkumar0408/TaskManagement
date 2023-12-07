@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
 
 import com.example.timesync.ui.SignUpActivity
@@ -14,10 +15,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 
 class LoginActivity : AppCompatActivity() {
+
+    private lateinit var appBar: ActionBar
     private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_page)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayShowHomeEnabled(true);
+        // Get support action bar
+        appBar = supportActionBar!!
+        appBar.title="Login"
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         auth = Firebase.auth
 
