@@ -66,5 +66,13 @@
     <string name="task_time">Task Time</string>
     <string name="save">Save</string>
     <string name="add_task">ADD TASK</string>
+
     <string name="low">Low</string>
+    <string-array name="priority_array">
+        <item>All</item>
+        <item>None</item>
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
 </resources>

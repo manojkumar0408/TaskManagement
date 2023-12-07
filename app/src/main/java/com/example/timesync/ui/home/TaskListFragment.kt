@@ -11,10 +11,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timesync.AddNewTaskActivity
-import com.example.timesync.TimeSyncDatabase
+import com.example.timesync.EditTaskActivity
 import com.example.timesync.databinding.FragmentHomeBinding
 import com.example.timesync.adapters.TaskListAdapter
-import com.example.timesync.db.Task
 
 class TaskListFragment : Fragment() {
 
@@ -32,10 +31,19 @@ class TaskListFragment : Fragment() {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
         // Initialize RecyclerView and Adapter
-        taskListAdapter = TaskListAdapter { task ->
-            Log.i("clicked", "fragment")
-            homeViewModel.deleteTask(task)
-        }
+        taskListAdapter = TaskListAdapter(
+            { task -> // onDeleteClickListener
+                Log.i("Delete clicked", "fragment")
+                homeViewModel.deleteTask(task)
+            },
+            { task -> // onEditClickListener
+                // Intent to navigate to the EditTaskActivity
+                val editIntent = Intent(requireContext(), EditTaskActivity::class.java).apply {
+                    putExtra("taskId", task.id ?: -1L)
+                }
+                startActivity(editIntent)
+            }
+        )
         binding!!.myCollectionsRv.adapter = taskListAdapter
         binding!!.myCollectionsRv.layoutManager = LinearLayoutManager(requireContext())
 
@@ -44,10 +52,10 @@ class TaskListFragment : Fragment() {
             taskListAdapter.submitList(tasks)
         })
 
+        // Floating action button click listener
         binding!!.fabBtn.setOnClickListener {
             startActivity(Intent(requireContext(), AddNewTaskActivity::class.java))
         }
-
 
         return root
     }

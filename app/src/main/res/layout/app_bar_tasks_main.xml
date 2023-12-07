@@ -19,6 +19,12 @@
             android:elevation="0dp"
             app:popupTheme="@style/Theme.TimeSync.PopupOverlay" />
 
+        <Spinner
+            android:id="@+id/spinnerPriorityFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/priority_array" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_tasks_main" />

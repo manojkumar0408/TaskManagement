@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:elevation="4dp">
+    android:elevation="4dp"
+    android:foreground="?attr/selectableItemBackground">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <View
+                android:layout_width="5dp"
+                android:layout_height="100dp"
+                android:background="@color/green" />
+
+        <ImageView
+            android:id="@+id/imageEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/imageDelete"
+            android:layout_marginEnd="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@android:drawable/ic_menu_edit"
+            android:layout_marginTop="8dp"/>
 
         <ImageView
             android:id="@+id/imageDelete"
@@ -18,7 +37,8 @@
             android:clickable="true"
             android:contentDescription="Delete Icon"
             android:focusable="true"
-            android:src="@android:drawable/ic_menu_delete" />
+            android:src="@android:drawable/ic_menu_delete"
+            android:layout_marginTop="8dp"/>
 
         <TextView
             android:id="@+id/textTitle"
@@ -26,7 +46,9 @@
             android:layout_height="wrap_content"
             android:text="Task Title"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:paddingLeft="8dp"
+            android:layout_marginTop="8dp"/>
 
         <TextView
             android:id="@+id/textDescription"
@@ -35,7 +57,9 @@
             android:layout_below="@id/textTitle"
             android:text="Task Description"
             android:textColor="@android:color/darker_gray"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:paddingLeft="8dp"
+            android:layout_marginTop="8dp"/>
 
         <TextView
             android:id="@+id/textDueDate"
@@ -45,7 +69,9 @@
             android:layout_marginTop="8dp"
             android:text="Due Date: 12/31/2023"
             android:textColor="@android:color/holo_red_dark"
-            android:textSize="14sp" />
-    </RelativeLayout>
+            android:textSize="14sp"
+            android:paddingLeft="8dp" />
+        </RelativeLayout>
+
 
 </androidx.cardview.widget.CardView>

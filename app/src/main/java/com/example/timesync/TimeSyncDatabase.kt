@@ -9,7 +9,7 @@ import com.example.timesync.db.CategoryDao
 import com.example.timesync.db.Task
 import com.example.timesync.db.TaskDao
 
-@Database(entities = [Category::class, Task::class], version = 1, exportSchema = false)
+@Database(entities = [Category::class, Task::class], version = 2, exportSchema = false)
 abstract class TimeSyncDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun taskDao(): TaskDao

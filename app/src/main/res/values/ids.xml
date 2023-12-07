@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="layoutTaskTitle" type="id" />
+    <item name="editTextTaskTitle" type="id" />
+    <item name="layoutTaskDescription" type="id" />
+    <item name="editTextTaskDescription" type="id" />
+    <item name="textViewPriorityLabel" type="id" />
+</resources>
