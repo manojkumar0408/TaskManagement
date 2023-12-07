@@ -25,17 +25,18 @@ xmlns:tools="http://schemas.android.com/tools">
         android:label="@string/title_activity_tasks_main"
         android:theme="@style/Theme.TimeSync." />
     <activity
-        android:name=".LoginActivity"
+        android:name=".TasksMainActivity"
         android:exported="false"
         android:label="@string/title_activity_login"
+
         android:theme="@style/Theme.TimeSync." />
     <activity
         android:name=".EditTaskActivity"
         android:exported="false"
-        android:label="@string/title_activity_login"
+        android:label="@string/title_activity_edit"
         android:theme="@style/Theme.TimeSync." />
     <activity
-        android:name=".TasksMainActivity"
+        android:name=".LoginActivity"
         android:exported="true">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
