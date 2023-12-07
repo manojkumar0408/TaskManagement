@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.example.timesync.R
+import com.example.timesync.SharedPref
 import com.example.timesync.TasksMainActivity
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Firebase
@@ -38,17 +39,19 @@ class SignUpActivity : AppCompatActivity() {
             if (userEmail.isNotBlank() && userFirstName.isNotBlank() &&
                 userLastName.isNotBlank() && userUsername.isNotBlank() && userPassword.isNotBlank()
             ) {
-                signup(userEmail, userPassword)
+                signup(userEmail, userPassword, userFirstName, userLastName, userUsername)
             } else {
                 Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun signup(email: String, password: String) {
+    private fun signup(email: String, password: String,FirstName: String, LastName: String, Username: String) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
                 val user = auth.currentUser
+                val SharedPref = SharedPref()
+                SharedPref.saveUserInfo(this, Username, FirstName, LastName, email);
                 Toast.makeText(this, "Welcome ${user?.email}", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, TasksMainActivity::class.java))
             } else {

@@ -26,6 +26,13 @@ class LoginActivity : AppCompatActivity() {
         val signup = findViewById<Button>(R.id.signup)
         val login = findViewById<Button>(R.id.login)
 
+        //var userInfo = SharedPref.UserInfo("","","","")
+        //val SharedPref = SharedPref()
+        //userInfo = SharedPref.getUserInfo(this)
+        //if (userInfo.email==""){
+
+        //}
+
         signup.setOnClickListener {
             val signUpIntent = Intent(this, SignUpActivity::class.java)
             startActivity(signUpIntent)
