@@ -81,8 +81,14 @@ class TaskListFragment : Fragment() {
 //        })
 
         binding!!.fabBtn.setOnClickListener {
+            startActivity(Intent(requireContext(), AddNewTaskActivity::class.java))
+        }
+        binding!!.sortBtn.setOnClickListener {
             sortByDueDate()
-            //            startActivity(Intent(requireContext(), AddNewTaskActivity::class.java))
+        }
+        binding!!.filterBtn.setOnClickListener {
+            showFilterOptions()
+
         }
         if (checkNotificationPermission()) {
             onPermissionGranted()
@@ -149,9 +155,19 @@ class TaskListFragment : Fragment() {
     }
 
     private fun filterByPriority(selectedPriority: String) {
-        homeViewModel.getAllTasksByPriority(selectedPriority)?.observe(
-            requireActivity()
-        ) { value -> taskListAdapter.submitList(value) }
+        if (!selectedPriority.equals("All")) {
+            homeViewModel.getAllTasksByPriority(selectedPriority)?.observe(
+                requireActivity()
+            ) { value -> taskListAdapter.submitList(value) }
+        }
+        else{
+            homeViewModel.allTasks?.observe(viewLifecycleOwner, Observer { tasks ->
+                if (!tasks?.isEmpty()!!) {
+                    binding?.calendarImage?.visibility = View.INVISIBLE
+                }
+                taskListAdapter.submitList(tasks)
+            })
+        }
     }
 
     private fun sortByDueDate() {
