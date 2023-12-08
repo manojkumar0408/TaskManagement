@@ -128,6 +128,9 @@ class TaskDetailActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         saveNotes()
+      //  AppState.saveLastVisitedPage(this, "TaskDetailActivity")
+
+
     }
 
     private fun saveNotes() {

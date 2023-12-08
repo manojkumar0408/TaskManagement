@@ -20,7 +20,8 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true"
+        tools:ignore="MissingConstraints" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/task_title"
@@ -116,7 +117,32 @@
             app:layout_constraintStart_toEndOf="@+id/radio_priority_medium"
             app:layout_constraintTop_toTopOf="parent" />
     </RadioGroup>
+    <TextView
+        android:id="@+id/spintxtt"
+        style="@style/RobotoBold18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_size_16"
+        android:text="Category"
+        android:textColor="@color/green"
+        app:layout_constraintStart_toStartOf="@id/text_view_priority"
+        app:layout_constraintTop_toBottomOf="@id/radio_group" />
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id ="@id/spintxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_size_10"
+        android:hint="Catogory"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spintxtt">
+        <Spinner
+            android:id="@+id/categories_spin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/due_date"
@@ -127,7 +153,7 @@
         android:text="@string/due_date"
         android:textColor="@color/green"
         app:layout_constraintStart_toStartOf="@id/text_view_priority"
-        app:layout_constraintTop_toBottomOf="@id/radio_group" />
+        app:layout_constraintTop_toBottomOf="@id/spintxt" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

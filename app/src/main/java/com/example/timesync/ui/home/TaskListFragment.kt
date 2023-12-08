@@ -75,6 +75,9 @@ class TaskListFragment : Fragment() {
             }
             taskListAdapter.submitList(tasks)
         })
+//        homeViewModel.filteredTasks.observe(viewLifecycleOwner, Observer { filteredTasks ->
+//            taskListAdapter.submitList(filteredTasks)
+//        })
 
         binding!!.fabBtn.setOnClickListener {
             startActivity(Intent(requireContext(), AddNewTaskActivity::class.java))
