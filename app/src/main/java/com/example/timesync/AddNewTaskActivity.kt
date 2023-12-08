@@ -7,6 +7,7 @@ import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.service.autofill.Validators.or
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
@@ -119,7 +120,11 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         } else if (description.trim().isEmpty()) {
             Toast.makeText(this, "Please insert a Description", Toast.LENGTH_SHORT).show()
             return
-        } else {
+        } else if ((date.toString() == "Task Date")  or (time.toString() =="Task Time")){
+            Toast.makeText(this, "Please insert a Date and Time", Toast.LENGTH_SHORT).show()
+            return
+        }
+       else {
             insertData(title, description, date, time,category)
         }
     }
