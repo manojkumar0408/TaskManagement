@@ -16,7 +16,8 @@ import java.util.*
 
 class TaskListAdapter(
     private val onDeleteClickListener: (Task) -> Unit,
-    private val onEditClickListener: (Task) -> Unit
+    private val onEditClickListener: (Task) -> Unit,
+    private val onItemClickListener: (Task) -> Unit
 ) : ListAdapter<Task, TaskListAdapter.ViewHolder>(TaskDiffCallback()) {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -52,6 +53,10 @@ class TaskListAdapter(
         holder.editImageView.setOnClickListener {
             onEditClickListener.invoke(currentTask)
         }
+        holder.itemView.setOnClickListener {
+            onItemClickListener.invoke(currentTask)
+        }
+
     }
 
     class TaskDiffCallback : DiffUtil.ItemCallback<Task>() {

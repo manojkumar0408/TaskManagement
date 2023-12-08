@@ -54,6 +54,13 @@ class TaskListFragment : Fragment() {
                     putExtra("taskId", task.id ?: -1L)
                 }
                 startActivity(editIntent)
+            },
+            { task ->
+                // Handle item click, open TaskDetailActivity
+                val intent = Intent(context, TaskDetailActivity::class.java)
+                // Pass additional data if needed, e.g., task ID
+                intent.putExtra("TASK_ID", task.id)
+                startActivity(intent)
             }
         )
 

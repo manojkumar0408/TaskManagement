@@ -12,6 +12,7 @@ data class Task(
     var priority: String?,
     var status: String,
     var dueDate: Long,
-    var category: String
+    var category: String,
+    var notes: String = ""
 ) {
 }

@@ -40,8 +40,8 @@ class EditTaskActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
         supportActionBar?.setDisplayShowHomeEnabled(true);
         // Get support action bar
-        appBar = supportActionBar!!
-        appBar.title="Edit Task"
+//        appBar = supportActionBar!!
+//        appBar.title="Edit Task"
 
         taskId = intent.getLongExtra("taskId", -1L)
         if (taskId == -1L) {

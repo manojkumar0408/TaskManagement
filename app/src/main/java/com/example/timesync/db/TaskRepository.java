@@ -25,6 +25,8 @@ public class TaskRepository {
         allTasks = taskDao.getAllTasks();
 //        allDueDates = taskDao.getAllDueDates();
         allCategories = categoryDao.getAllCategories();
+
+
     }
 
     public LiveData<List<Task>> getAllTasksByCategory(String category) {
@@ -46,7 +48,7 @@ public class TaskRepository {
     public LiveData<List<Task>> getAllTasksByStatus(String status) {
         return taskDao.getAllTasksByStatus(status);
     }
-    public LiveData<List<Task>> getTasksByPriority(String priority) {
+    public LiveData<List<Task>> getTasksByIdSync(String priority) {
         return taskDao.getTasksByPriority(priority);
     }
 
@@ -73,6 +75,13 @@ public class TaskRepository {
 
     public LiveData<List<Task>> getAllTasks() {
         return allTasks;
+    }
+
+    public LiveData<Task> getTaskById(long id) {
+        return taskDao.getTaskById(id);
+    }
+    public Task getTaskByIdSync(long id) {
+        return taskDao.getTaskByIdSync(id);
     }
 
     //Room doesnt allow database operations on the main thread (app crash). Use async tasks

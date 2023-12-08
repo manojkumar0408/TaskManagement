@@ -53,4 +53,6 @@ interface TaskDao {
     @Query("SELECT * FROM task_table WHERE priority = :priority")
     fun getTasksByPriority(priority: String?): LiveData<List<Task?>?>?
 
+    @Query("SELECT * FROM TASK_TABLE WHERE id = :id")
+    fun getTaskByIdSync(id: Long): Task?
 }

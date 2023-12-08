@@ -47,6 +47,11 @@
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.TimeSync." />
         <activity
+            android:name=".EditTaskActivity"
+            android:exported="false"
+            android:label="@string/title_activity_edit"
+            android:theme="@style/Theme.TimeSync." />
+        <activity
             android:name=".TasksMainActivity"
             android:exported="true">
             <intent-filter>
