@@ -6,4 +6,5 @@
     <item name="editTextTaskDescription" type="id" />
     <item name="textViewPriorityLabel" type="id" />
     <item name="spintxt" type="id" />
+    <item name="app_bar_image" type="id" />
 </resources>

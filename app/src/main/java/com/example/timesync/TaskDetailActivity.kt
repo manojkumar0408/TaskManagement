@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.timesync.databinding.ActivityTaskDetailBinding
@@ -34,6 +35,8 @@ class TaskDetailActivity : AppCompatActivity() {
     private var descriptionTextView: TextView? = null
     private var dueDateTextView: TextView? = null
     private var priorityTextView: TextView? = null
+    private var categoryTextView: TextView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,7 +47,7 @@ class TaskDetailActivity : AppCompatActivity() {
         descriptionTextView = findViewById(R.id.task_description_tv)
         dueDateTextView = findViewById(R.id.set_date_time_tv)
         priorityTextView = findViewById(R.id.set_priority_tv)
-
+        categoryTextView = findViewById(R.id.set_category_tv)
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
         val toolbar = findViewById<CollapsingToolbarLayout>(R.id.toolbar_layout)
         binding.voiceNotes.setOnClickListener {
@@ -85,13 +88,25 @@ class TaskDetailActivity : AppCompatActivity() {
     }
 
     private fun displayTaskDetails(task: Task?) {
-        task?.let {
-            notesEditText?.setText(task.notes) // Assuming you have a notes field
+        if (task != null) {
+            notesEditText?.setText(task.notes)
             descriptionTextView?.text = task.description
             dueDateTextView?.text = formatDate(task.dueDate)
             priorityTextView?.text = task.priority
+            categoryTextView?.text = task.category
+
+            // Set AppBar drawable based on the category
+            val appBarImageView = findViewById<AppCompatImageView>(R.id.app_bar_image)
+            when (task.category) {
+                "Class" -> appBarImageView.setImageResource(R.drawable.c2)
+                "Personal" -> appBarImageView.setImageResource(R.drawable.per2)
+                "Part-time" -> appBarImageView.setImageResource(R.drawable.pt2)
+                else -> appBarImageView.setImageResource(R.drawable.person)
+            }
         }
     }
+
+
 
     private fun formatDate(timestamp: Long): String {
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())

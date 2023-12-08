@@ -112,7 +112,7 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         val description: String = binding.taskDescEditText.text.toString()
         val date: String = binding.textViewDate.text.toString()
         val time: String = binding.textViewTime.text.toString()
-        val category = binding.categoriesSpinner.selectedItem.toString()
+        val category : String = binding.categoriesSpin.selectedItem.toString()
         if (title.trim { it <= ' ' }.isEmpty()) {
             Toast.makeText(this, "Please insert a Title", Toast.LENGTH_SHORT).show()
             return

@@ -55,4 +55,5 @@
     <string name="last_name">Last name</string>
     <string name="filter">filter</string>
     <string name="sort">sort</string>
+    <string name="category">category</string>
 </resources>

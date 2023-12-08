@@ -89,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun getPermissions(): Boolean {
-        Log.d("permissiom", "check Gall")
+      //  Log.d("permissiom", "check Gall")
         return ContextCompat.checkSelfPermission(
             this, Manifest.permission.READ_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
