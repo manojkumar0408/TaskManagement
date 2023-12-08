@@ -44,8 +44,7 @@ class LoginActivity : AppCompatActivity() {
         // Get support action bar
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         auth = Firebase.auth
-        if(!getPermissions())
-            requestGalleryPermission()
+        if (!getPermissions()) requestGalleryPermission()
 
         if (SharedPref().hasValues(applicationContext)) {
             val signUpIntent = Intent(this, TasksMainActivity::class.java)
@@ -90,7 +89,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun getPermissions(): Boolean {
-      //  Log.d("permissiom", "check Gall")
         return ContextCompat.checkSelfPermission(
             this, Manifest.permission.READ_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
