@@ -2,17 +2,19 @@ package com.example.timesync.ui.gallery
 
 import android.Manifest
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.ContentResolver
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -20,15 +22,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.timesync.SharedPref
 import com.example.timesync.databinding.FragmentProfileBinding
-import com.google.firebase.auth.UserInfo
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
-import com.google.common.io.Files.getFileExtension
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.OnProgressListener
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import java.util.UUID
 
 
 class ProfileFragment : Fragment() {
@@ -38,9 +40,10 @@ class ProfileFragment : Fragment() {
     private val IMAGE_ADD_CODE = 100
 
     private val PERMISSION_CODE = 1001
-    var storage: FirebaseStorage? = null
     private var filePath: Uri? = null
     private val binding get() = _binding!!
+    private var storage: FirebaseStorage? = null
+    private var storageReference: StorageReference? = null
 
 
     override fun onCreateView(
@@ -49,9 +52,10 @@ class ProfileFragment : Fragment() {
         val galleryViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        storage = FirebaseStorage.getInstance();
         var user = Firebase.auth.currentUser
-
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage?.getReference()
+        Log.d("storafe", storageReference.toString())
         binding.camera.setOnClickListener {
             handleCameraButtonClick()
         }
@@ -149,7 +153,7 @@ class ProfileFragment : Fragment() {
         binding.profileIcon.setImageURI(imageUri)
         val SharedPref = SharedPref()
         SharedPref.saveImageUri(requireContext(), imageUri.toString())
-//        storeInFirebase(requireContext(), imageUri!!, "")
+
     }
 
     override fun onDestroyView() {
@@ -161,22 +165,54 @@ class ProfileFragment : Fragment() {
         context, "Upload failed: ${string}", Toast.LENGTH_SHORT
     )
 
-    fun storeInFirebase(context: Context, uri: Uri, type: String) {
-        var riversRef: StorageReference? = null
-        val mStorageRef = FirebaseStorage.getInstance().reference
+    private fun uploadImage() {
+        if (filePath != null) {
+            val progressDialog = ProgressDialog(requireContext())
+            progressDialog.setTitle("Uploading...")
+            progressDialog.show()
+            val ref = storageReference!!.child("images/" + UUID.randomUUID().toString() + ".jpg")
+            Toast.makeText(context, "$ref", Toast.LENGTH_SHORT).show()
 
-        riversRef = mStorageRef.child("pictures/" + "${Firebase.auth.currentUser?.uid}.jpg")
-        val uploadTask = riversRef.putFile(uri)
-        uploadTask.addOnFailureListener { exception ->
-            toast("failed")?.show()
-
-            Log.d("downloadUrl", "failed")
-        }.addOnSuccessListener { taskSnapshot ->
-            toast("done")?.show()
-
-            val downloadUrl = taskSnapshot.storage.downloadUrl
-            Log.d("downloadUrl", "$downloadUrl")
-
+            ref.putFile(filePath!!).addOnSuccessListener {
+                    progressDialog.dismiss()
+                    Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener { e ->
+                    progressDialog.dismiss()
+                    Toast.makeText(context, "Failed " + e.message, Toast.LENGTH_SHORT).show()
+                }.addOnProgressListener { taskSnapshot ->
+                    val progress =
+                        100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount
+                    progressDialog.setMessage("Uploaded " + progress.toInt() + "%")
+                }
         }
     }
+
+    fun storeInFirebase(uri: Uri) {
+        val userID = FirebaseAuth.getInstance().currentUser?.uid
+        val storageRef = FirebaseStorage.getInstance().reference
+        val profilePicRef = storageRef.child("images/${userID}.jpg")
+
+        val uploadTask = profilePicRef.putFile(uri)
+        uploadTask.addOnSuccessListener { taskSnapshot: UploadTask.TaskSnapshot? -> }
+            .addOnFailureListener { exception: Exception? ->
+                // Handle unsuccessful upload
+                Toast.makeText(
+                    requireContext(), "Profile picture upload failed.", Toast.LENGTH_SHORT
+                ).show()
+            }
+        val db = FirebaseFirestore.getInstance()
+        val usersCollection = db.collection("users")
+        val user: MutableMap<String, Any> = HashMap()
+        user["name"] = "manoj"
+        user["profilePicUrl"] = profilePicRef.path // Store the path, not the direct download URL
+        usersCollection.document().set(user)
+
+    }
+
+    private fun getFileExtension(uri: Uri): String? {
+        val contentResolver: ContentResolver = requireContext().getContentResolver()
+        val mime = MimeTypeMap.getSingleton()
+        return mime.getExtensionFromMimeType(contentResolver.getType(uri))
+    }
+
 }

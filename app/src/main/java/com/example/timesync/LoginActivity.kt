@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.util.Patterns
 import android.widget.Button
 import android.widget.Toast
@@ -18,7 +17,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.timesync.databinding.ActivityLoginPageBinding
 import com.example.timesync.db.FirebaseDatabaseManager
-import com.example.timesync.db.User
 import com.example.timesync.ui.SignUpActivity
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Firebase
@@ -28,7 +26,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 class LoginActivity : AppCompatActivity() {
-
     private lateinit var appBar: ActionBar
 
     private val PERMISSION_CODE = 1001
@@ -51,7 +48,9 @@ class LoginActivity : AppCompatActivity() {
 
         if (SharedPref().hasValues(applicationContext)) {
             val signUpIntent = Intent(this, TasksMainActivity::class.java)
+            signUpIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(signUpIntent)
+            finish()
         }
 
         val email = findViewById<TextInputLayout>(R.id.emailAddress)
@@ -126,6 +125,7 @@ class LoginActivity : AppCompatActivity() {
                             val animationBundle = ActivityOptions.makeCustomAnimation(
                                 this, R.anim.slide_in_right, R.anim.slide_out_left
                             ).toBundle()
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                             startActivity(intent, animationBundle)
                             finish()
                         }
