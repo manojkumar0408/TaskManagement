@@ -136,8 +136,7 @@ class ProfileFragment : Fragment() {
         filePath = data?.data
 //        binding.profileIcon.setImageURI(imageUri)
 //        storeInFirebase(imageUri!!)
-        val bitmap =
-            MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), filePath)
+        val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
         binding.profileIcon.setImageBitmap(bitmap)
 //        uploadImage()
     }
@@ -160,16 +159,15 @@ class ProfileFragment : Fragment() {
             Toast.makeText(context, "$ref", Toast.LENGTH_SHORT).show()
 
             ref.putFile(filePath!!).addOnSuccessListener {
-                    progressDialog.dismiss()
-                    Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show()
-                }.addOnFailureListener { e ->
-                    progressDialog.dismiss()
-                    Toast.makeText(context, "Failed " + e.message, Toast.LENGTH_SHORT).show()
-                }.addOnProgressListener { taskSnapshot ->
-                    val progress =
-                        100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount
-                    progressDialog.setMessage("Uploaded " + progress.toInt() + "%")
-                }
+                progressDialog.dismiss()
+                Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener { e ->
+                progressDialog.dismiss()
+                Toast.makeText(context, "Failed " + e.message, Toast.LENGTH_SHORT).show()
+            }.addOnProgressListener { taskSnapshot ->
+                val progress = 100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount
+                progressDialog.setMessage("Uploaded " + progress.toInt() + "%")
+            }
         }
     }
 
