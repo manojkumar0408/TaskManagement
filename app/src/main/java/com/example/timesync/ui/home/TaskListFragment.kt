@@ -74,6 +74,9 @@ class TaskListFragment : Fragment() {
         homeViewModel.allTasks?.observe(viewLifecycleOwner, Observer { tasks ->
             taskListAdapter.submitList(tasks)
         })
+//        homeViewModel.filteredTasks.observe(viewLifecycleOwner, Observer { filteredTasks ->
+//            taskListAdapter.submitList(filteredTasks)
+//        })
 
         // Floating action button click listener
         binding!!.fabBtn.setOnClickListener {

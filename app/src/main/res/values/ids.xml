@@ -5,4 +5,5 @@
     <item name="layoutTaskDescription" type="id" />
     <item name="editTextTaskDescription" type="id" />
     <item name="textViewPriorityLabel" type="id" />
+    <item name="spintxt" type="id" />
 </resources>

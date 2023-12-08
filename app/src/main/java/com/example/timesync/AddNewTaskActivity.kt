@@ -8,11 +8,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.timesync.Fragments.DatePickerFragment
@@ -61,6 +63,7 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         taskActivityViewModel = ViewModelProvider(this)[TaskActivityViewModel::class.java]
         initialise()
         setListeners()
+        setupCategorySpinner()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -108,7 +111,7 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         val description: String = binding.taskDescEditText.text.toString()
         val date: String = binding.textViewDate.text.toString()
         val time: String = binding.textViewTime.text.toString()
-
+        val category = binding.categoriesSpinner.selectedItem.toString()
         if (title.trim { it <= ' ' }.isEmpty()) {
             Toast.makeText(this, "Please insert a Title", Toast.LENGTH_SHORT).show()
             return
@@ -116,19 +119,19 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
             Toast.makeText(this, "Please insert a Description", Toast.LENGTH_SHORT).show()
             return
         } else {
-            insertData(title, description, date, time)
+            insertData(title, description, date, time,category)
         }
     }
 
-    private fun insertData(title: String, description: String, date: String, time: String) {
+    private fun insertData(title: String, description: String, date: String, time: String,category:String) {
         var timeMillis: Long? = null
         val id = abs((0..999999999999).random())
         var task: Task?
         if (date != application.getString(R.string.task_date) && time != application.getString(R.string.task_time) && radioChoice != null) {
             timeMillis = convertTimeInMillis()
-            task = Task(id, title, description, radioChoice!!, "college", timeMillis, "college")
+            task = Task(id, title, description, radioChoice!!, "college", timeMillis,category)
         } else {
-            task = Task(id, title, description, radioChoice!!, "college", 0L, "college")
+            task = Task(id, title, description, radioChoice!!, "college", 0L, category)
         }
         val repository = TaskRepository(application)
         repository.insert(
@@ -138,7 +141,7 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
             Toast.makeText(applicationContext, "Task Saved", Toast.LENGTH_SHORT).show()
             if (timeMillis != null) {
                 convertTimeInMillis()
-                startAlarm(id, title, description, radioChoice, "college", timeMillis, "college")
+                startAlarm(id, title, description, radioChoice, "college", timeMillis, category)
             }
             finish()
         }
@@ -225,6 +228,15 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return dateFormat.format(date.time)
     }
+
+    private fun setupCategorySpinner() {
+        val categories = arrayOf("Class", "Part-time", "Personal")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.categoriesSpin.adapter = adapter
+    }
+
+
 
 //    private fun formatTime(time: String): String {
 //        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
