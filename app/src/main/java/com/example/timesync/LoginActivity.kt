@@ -97,6 +97,7 @@ class LoginActivity : AppCompatActivity() {
                                 this, R.anim.slide_in_right, R.anim.slide_out_left
                             ).toBundle()
                             startActivity(intent, animationBundle)
+                            finish()
                         }
                     }
                 }

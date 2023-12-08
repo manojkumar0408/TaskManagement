@@ -2,11 +2,13 @@ package com.example.timesync.ui
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Toast
@@ -14,6 +16,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.timesync.R
 import com.example.timesync.databinding.FragmentProfileBinding
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class ProfilePictureClass : AppCompatActivity() {
 
@@ -75,4 +79,8 @@ class ProfilePictureClass : AppCompatActivity() {
             binding.profileIcon.setImageURI(imageUri)
         }
     }
+
+
+
+
 }

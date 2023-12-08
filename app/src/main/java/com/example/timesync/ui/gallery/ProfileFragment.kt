@@ -3,6 +3,7 @@ package com.example.timesync.ui.gallery
 import android.Manifest
 import android.app.Activity
 import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -130,6 +131,7 @@ class ProfileFragment : Fragment() {
         val imageUri: Uri? = data?.data
         filePath = data?.data
         binding.profileIcon.setImageURI(imageUri)
+//        storeInFirebase(requireContext(), imageUri!!, "")
     }
 
     override fun onDestroyView() {
@@ -137,7 +139,26 @@ class ProfileFragment : Fragment() {
         _binding = null
     }
 
-    private fun toast(task: Task<Uri>): Toast? = Toast.makeText(
-        context, "Upload failed: ${task.exception?.message}", Toast.LENGTH_SHORT
+    private fun toast(string: String): Toast? = Toast.makeText(
+        context, "Upload failed: ${string}", Toast.LENGTH_SHORT
     )
+
+    fun storeInFirebase(context: Context, uri: Uri, type: String) {
+        var riversRef: StorageReference? = null
+        val mStorageRef = FirebaseStorage.getInstance().reference
+
+        riversRef = mStorageRef.child("pictures/" + "${Firebase.auth.currentUser?.uid}.jpg")
+        val uploadTask = riversRef.putFile(uri)
+        uploadTask.addOnFailureListener { exception ->
+            toast("failed")?.show()
+
+            Log.d("downloadUrl", "failed")
+        }.addOnSuccessListener { taskSnapshot ->
+            toast("done")?.show()
+
+            val downloadUrl = taskSnapshot.storage.downloadUrl
+            Log.d("downloadUrl", "$downloadUrl")
+
+        }
+    }
 }

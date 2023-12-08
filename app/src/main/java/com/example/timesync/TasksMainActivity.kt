@@ -1,35 +1,33 @@
 package com.example.timesync
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
-import androidx.appcompat.app.ActionBar
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.navigation.NavigationView
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.ViewModelProvider
 import com.example.timesync.databinding.ActivityTasksMainBinding
-import com.example.timesync.ui.home.HomeViewModel
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
+
 
 class TasksMainActivity : AppCompatActivity() {
 
     //private lateinit var appBar: ActionBar
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityTasksMainBinding
+
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTasksMainBinding.inflate(layoutInflater)
@@ -55,6 +53,16 @@ class TasksMainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        val header = binding.navView.getHeaderView(0)
+        val name = header.findViewById<TextView>(R.id.nav_user_name)
+        val email = header.findViewById<TextView>(R.id.nav_email)
+        val imageView = header.findViewById<ImageView>(R.id.nav_imageView)
+        val sharedPref = SharedPref().getUserInfo(applicationContext)
+        if (sharedPref != null) {
+            name.text = "${sharedPref.firstName} ${sharedPref.lastName}"
+            email.text = sharedPref.email
+        }
 
     }
 //

@@ -65,6 +65,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
+                <action android:name="com.example.timesync.ACTION_STOP_ALARM" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
