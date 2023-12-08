@@ -37,14 +37,17 @@ class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val IMAGE_PICK_CODE = 1000
+    private val IMAGE_ADD_CODE = 100
+
     private val PERMISSION_CODE = 1001
     private var filePath: Uri? = null
     private val binding get() = _binding!!
     private var storage: FirebaseStorage? = null
     private var storageReference: StorageReference? = null
 
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View {
         val galleryViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
@@ -82,18 +85,24 @@ class ProfileFragment : Fragment() {
         binding.fname.setText(user.firstName)
         binding.lname.setText(user.lastName)
         binding.email1.setText(user.email)
+
+        if (checkGalleryPermission()) {
+            var img = sharedPref.getImageUri(requireContext())
+            img = Uri.parse(img.toString()).toString()
+            binding.profileIcon.setImageURI(Uri.parse(img))
+        }
     }
 
     private fun handleCameraButtonClick() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+//            openGallery()
+//        } else {
+        if (checkGalleryPermission()) {
             openGallery()
         } else {
-            if (checkGalleryPermission()) {
-                openGallery()
-            } else {
-                requestGalleryPermission()
-            }
+            requestGalleryPermission()
         }
+        // }
     }
 
     private fun checkGalleryPermission(): Boolean {
@@ -110,11 +119,18 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             openGallery()
+        } else {
+            val sharedPref = SharedPref()
+            var img = sharedPref.getImageUri(requireContext())
+            if (img != null) {
+                img = Uri.parse(img.toString()).toString()
+                binding.profileIcon.setImageURI(Uri.parse(img))
+            }
         }
     }
 
@@ -134,11 +150,10 @@ class ProfileFragment : Fragment() {
     private fun handleImageSelection(data: Intent?) {
         val imageUri: Uri? = data?.data
         filePath = data?.data
-//        binding.profileIcon.setImageURI(imageUri)
-//        storeInFirebase(imageUri!!)
-        val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
-        binding.profileIcon.setImageBitmap(bitmap)
-//        uploadImage()
+        binding.profileIcon.setImageURI(imageUri)
+        val SharedPref = SharedPref()
+        SharedPref.saveImageUri(requireContext(), imageUri.toString())
+
     }
 
     override fun onDestroyView() {

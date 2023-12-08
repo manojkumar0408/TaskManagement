@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.timesync.R
+import com.example.timesync.SharedPref
 import com.example.timesync.databinding.FragmentProfileBinding
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -77,6 +78,7 @@ class ProfilePictureClass : AppCompatActivity() {
             // Set the selected image URI to the ImageView
             val imageUri: Uri? = data?.data
             binding.profileIcon.setImageURI(imageUri)
+
         }
     }
 
