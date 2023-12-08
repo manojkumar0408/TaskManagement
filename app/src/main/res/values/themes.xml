@@ -35,6 +35,7 @@
         <item name="colorAccent">@color/deepBlue</item>
         <item name="android:statusBarColor">@color/deepBlue</item>
     </style>
+
     <style name="redTheme" parent="Base.Theme.TimeSync">
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">14sp</item>
@@ -45,5 +46,6 @@
         <item name="colorAccent">@color/MediumRed</item>
         <item name="android:statusBarColor">@color/LightRed</item>
     </style>
+
 </resources>
 

@@ -56,6 +56,7 @@ class ProfileFragment : Fragment() {
             val SharedPref = SharedPref()
             SharedPref.saveUserInfo(
                 requireContext(),
+                user?.uid!!,
                 binding.user1.text.toString(),
                 binding.fname.text.toString(),
                 binding.lname.text.toString(),
@@ -69,13 +70,13 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var userInfo = SharedPref.UserInfo("", "", "", "")
-        val SharedPref = SharedPref()
-        userInfo = SharedPref.getUserInfo(requireContext())
-        binding.user1.setText(userInfo.username)
-        binding.fname.setText(userInfo.firstName)
-        binding.lname.setText(userInfo.lastName)
-        binding.email1.setText(userInfo.email)
+        val sharedPref = SharedPref()
+        val user = sharedPref.getUserInfo(requireContext())
+
+        binding.user1.setText(user.username)
+        binding.fname.setText(user.firstName)
+        binding.lname.setText(user.lastName)
+        binding.email1.setText(user.email)
     }
 
     private fun handleCameraButtonClick() {
@@ -98,8 +99,6 @@ class ProfileFragment : Fragment() {
     }
 
     private fun requestGalleryPermission() {
-        Log.d("permissiom", "requ permi")
-
         ActivityCompat.requestPermissions(
             requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_CODE
         )
@@ -108,8 +107,6 @@ class ProfileFragment : Fragment() {
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
-        Log.d("permissiom", "On result")
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             openGallery()
@@ -138,9 +135,6 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun uploadImage() {
     }
 
     private fun toast(task: Task<Uri>): Toast? = Toast.makeText(

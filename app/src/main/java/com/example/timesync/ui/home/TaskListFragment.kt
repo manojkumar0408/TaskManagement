@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timesync.AddNewTaskActivity
 import com.example.timesync.EditTaskActivity
 import com.example.timesync.R
+import com.example.timesync.SharedPref
 import com.example.timesync.TaskDetailActivity
 import com.example.timesync.adapters.TaskListAdapter
 import com.example.timesync.databinding.FragmentHomeBinding
@@ -40,7 +41,10 @@ class TaskListFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding!!.root
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        Log.d("userrrr", FirebaseAuth.getInstance().currentUser?.uid.toString())
+        val sharedPref = SharedPref()
+        val user = sharedPref.getUserInfo(requireContext())
+
+        Log.d("userrrr", "${user.username} ${user.firstName}")
 
         // Initialize RecyclerView and Adapter
         taskListAdapter = TaskListAdapter(

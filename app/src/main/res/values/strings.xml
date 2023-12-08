@@ -43,4 +43,14 @@
     <string name="description">Description</string>
     <string name="date_and_time">Date And Time</string>
     <string name="notes">Notes</string>
+    <string name="login">Login</string>
+    <string name="signup">Signup</string>
+    <string name="password">Password</string>
+    <string name="password_not_valid">Password is not valid</string>
+    <string name="email_not_valid">Email is not valid</string>
+    <string name="not_valid">Email and Password can\'t be blank</string>
+    <string name="username">username</string>
+    <string name="email">Email</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
 </resources>

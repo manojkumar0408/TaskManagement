@@ -35,8 +35,6 @@ class TasksMainActivity : AppCompatActivity() {
         binding = ActivityTasksMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-
-
         setSupportActionBar(binding.appBarTasksMain.toolbar)
         //supportActionBar?.setDisplayHomeAsUpEnabled(true);
         //supportActionBar?.setDisplayShowHomeEnabled(true);
@@ -50,8 +48,6 @@ class TasksMainActivity : AppCompatActivity() {
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home, R.id.nav_profile, R.id.nav_slideshow
@@ -96,27 +92,19 @@ class TasksMainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.action_logout -> {
-                clearSharedPreferences()
+                SharedPref().clearSharedPreferences(applicationContext)
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
-                return true
+                finish()
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun clearSharedPreferences() {
-        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.remove("KEY_USERNAME")
-        editor.remove("KEY_FIRST_NAME")
-        editor.remove("KEY_LAST_NAME")
-        editor.remove("KEY_EMAIL")
-        editor.apply()
-        Toast.makeText(this, "Logout successful", Toast.LENGTH_SHORT).show()
-    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
