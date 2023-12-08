@@ -101,11 +101,10 @@ class TaskDetailActivity : AppCompatActivity() {
                 "Class" -> appBarImageView.setImageResource(R.drawable.c2)
                 "Personal" -> appBarImageView.setImageResource(R.drawable.per2)
                 "Part-time" -> appBarImageView.setImageResource(R.drawable.pt2)
-                else -> appBarImageView.setImageResource(R.drawable.person)
+                else -> appBarImageView.setImageResource(R.drawable.baseline_access_time_filled_24)
             }
         }
     }
-
 
 
     private fun formatDate(timestamp: Long): String {
@@ -143,7 +142,7 @@ class TaskDetailActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         saveNotes()
-      //  AppState.saveLastVisitedPage(this, "TaskDetailActivity")
+        //  AppState.saveLastVisitedPage(this, "TaskDetailActivity")
 
 
     }

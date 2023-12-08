@@ -1,17 +1,14 @@
 package com.example.timesync.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.timesync.db.Task
-import com.example.timesync.db.TaskRepository
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.timesync.TimeSyncDatabase
 import com.example.timesync.db.Category
 import com.example.timesync.db.CategoryDao
+import com.example.timesync.db.Task
 import com.example.timesync.db.TaskDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,8 +27,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
     private val _filteredTasks = MutableLiveData<List<Task>>()
     val filteredTasks: LiveData<List<Task>> = _filteredTasks
-
-
 
     fun insertCategory(category: Category) {
         viewModelScope.launch {
@@ -67,7 +62,18 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
-
-
     }
+
+    fun getAllTasksByPriority(priority: String?): LiveData<List<Task?>?>? {
+        return taskDao.getAllTasksByPriority(priority)
+    }
+
+    fun getAllTaskInASC(): LiveData<List<Task?>?>? {
+        return taskDao.getAllTasksByDateASC()
+    }
+
+    fun getAllTaskInDESC(): LiveData<List<Task?>?>? {
+        return taskDao.getAllTasksByDateDESC()
+    }
+
 }

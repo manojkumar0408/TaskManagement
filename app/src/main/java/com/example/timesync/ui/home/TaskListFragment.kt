@@ -1,9 +1,7 @@
 package com.example.timesync.ui.home
 
 import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,13 +9,15 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -27,9 +27,10 @@ import com.example.timesync.EditTaskActivity
 import com.example.timesync.R
 import com.example.timesync.SharedPref
 import com.example.timesync.TaskDetailActivity
+import com.example.timesync.TasksMainActivity
 import com.example.timesync.adapters.TaskListAdapter
 import com.example.timesync.databinding.FragmentHomeBinding
-import com.google.firebase.auth.FirebaseAuth
+
 
 class TaskListFragment : Fragment() {
     private var binding: FragmentHomeBinding? = null
@@ -80,7 +81,8 @@ class TaskListFragment : Fragment() {
 //        })
 
         binding!!.fabBtn.setOnClickListener {
-            startActivity(Intent(requireContext(), AddNewTaskActivity::class.java))
+            sortByDueDate()
+            //            startActivity(Intent(requireContext(), AddNewTaskActivity::class.java))
         }
         if (checkNotificationPermission()) {
             onPermissionGranted()
@@ -88,6 +90,11 @@ class TaskListFragment : Fragment() {
             requestNotificationPermission()
         }
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true);
     }
 
     private fun checkNotificationPermission(): Boolean {
@@ -128,4 +135,29 @@ class TaskListFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
+
+    private fun showFilterOptions() {
+        val priorities = arrayOf("Low", "Medium", "High", "All")
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Filter by Priority")
+        builder.setItems(priorities) { _, which ->
+            Log.i("detailss", which.toString())
+            val selectedPriority = priorities[which]
+            filterByPriority(selectedPriority)
+        }
+        builder.show()
+    }
+
+    private fun filterByPriority(selectedPriority: String) {
+        homeViewModel.getAllTasksByPriority(selectedPriority)?.observe(
+            requireActivity()
+        ) { value -> taskListAdapter.submitList(value) }
+    }
+
+    private fun sortByDueDate() {
+        homeViewModel.getAllTaskInASC()?.observe(
+            requireActivity()
+        ) { value -> taskListAdapter.submitList(value) }
+    }
+
 }

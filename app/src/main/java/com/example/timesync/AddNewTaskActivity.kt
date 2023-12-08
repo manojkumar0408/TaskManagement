@@ -113,31 +113,33 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         val description: String = binding.taskDescEditText.text.toString()
         val date: String = binding.textViewDate.text.toString()
         val time: String = binding.textViewTime.text.toString()
-        val category : String = binding.categoriesSpin.selectedItem.toString()
+        val category: String = binding.categoriesSpin.selectedItem.toString()
+
         if (title.trim { it <= ' ' }.isEmpty()) {
             Toast.makeText(this, "Please insert a Title", Toast.LENGTH_SHORT).show()
             return
         } else if (description.trim().isEmpty()) {
             Toast.makeText(this, "Please insert a Description", Toast.LENGTH_SHORT).show()
             return
-        } else if ((date.toString() == "Task Date")  or (time.toString() =="Task Time")){
+        } else if ((date.toString() == "Task Date") or (time.toString() == "Task Time")) {
             Toast.makeText(this, "Please insert a Date and Time", Toast.LENGTH_SHORT).show()
             return
-        }
-       else {
-            insertData(title, description, date, time,category)
+        } else {
+            insertData(title, description, date, time, category)
         }
     }
 
-    private fun insertData(title: String, description: String, date: String, time: String,category:String) {
+    private fun insertData(
+        title: String, description: String, date: String, time: String, category: String
+    ) {
         var timeMillis: Long? = null
         val id = abs((0..999999999999).random())
         var task: Task?
         if (date != application.getString(R.string.task_date) && time != application.getString(R.string.task_time) && radioChoice != null) {
             timeMillis = convertTimeInMillis()
-            task = Task(id, title, description, radioChoice!!, "college", timeMillis,category)
+            task = Task(id, title, description, radioChoice!!, "college", timeMillis, "category")
         } else {
-            task = Task(id, title, description, radioChoice!!, "college", 0L, category)
+            task = Task(id, title, description, radioChoice!!, "college", 0L, "category")
         }
         val repository = TaskRepository(application)
         repository.insert(
@@ -147,7 +149,7 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
             Toast.makeText(applicationContext, "Task Saved", Toast.LENGTH_SHORT).show()
             if (timeMillis != null) {
                 convertTimeInMillis()
-                startAlarm(id, title, description, radioChoice, "college", timeMillis, category)
+                startAlarm(id, title, description, radioChoice, "college", timeMillis, "category")
             }
             finish()
         }
@@ -244,13 +246,5 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.categoriesSpin.adapter = adapter
     }
-
-
-
-//    private fun formatTime(time: String): String {
-//        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-//        return timeFormat.format(time.time)
-//    }
-
 
 }
