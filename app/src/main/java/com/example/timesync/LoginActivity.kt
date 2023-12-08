@@ -1,7 +1,10 @@
 package com.example.timesync
 
+import android.Manifest
 import android.app.ActivityOptions
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -11,6 +14,8 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.timesync.databinding.ActivityLoginPageBinding
 import com.example.timesync.db.FirebaseDatabaseManager
 import com.example.timesync.db.User
@@ -25,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var appBar: ActionBar
+
+    private val PERMISSION_CODE = 1001
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityLoginPageBinding
     private val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
@@ -39,6 +46,8 @@ class LoginActivity : AppCompatActivity() {
         // Get support action bar
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         auth = Firebase.auth
+        if(!getPermissions())
+            requestGalleryPermission()
 
         if (SharedPref().hasValues(applicationContext)) {
             val signUpIntent = Intent(this, TasksMainActivity::class.java)
@@ -78,6 +87,27 @@ class LoginActivity : AppCompatActivity() {
 
     private fun isValidEmail(target: CharSequence?): Boolean {
         return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
+    }
+
+    private fun getPermissions(): Boolean {
+        Log.d("permissiom", "check Gall")
+        return ContextCompat.checkSelfPermission(
+            this, Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestGalleryPermission() {
+        ActivityCompat.requestPermissions(
+            this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_CODE
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        }
     }
 
     private fun login(email: String, password: String) {

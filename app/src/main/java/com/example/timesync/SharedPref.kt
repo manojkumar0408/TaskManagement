@@ -1,8 +1,11 @@
 package com.example.timesync
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.widget.Toast
 import com.example.timesync.db.User
+import java.io.ByteArrayOutputStream
+import android.util.Base64
 
 class SharedPref {
 
@@ -12,6 +15,7 @@ class SharedPref {
     private val KEY_FIRST_NAME = "firstName"
     private val KEY_LAST_NAME = "lastName"
     private val KEY_EMAIL = "email"
+    private val KEY_IMAGE_URI = "imageUri"
 
     fun saveUserInfo(
         context: Context,
@@ -56,5 +60,17 @@ class SharedPref {
         editor.remove(KEY_EMAIL)
         editor.apply()
         Toast.makeText(context, "Logout successful", Toast.LENGTH_SHORT).show()
+    }
+
+    fun saveImageUri(context: Context, imageUri: String) {
+        val sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString(KEY_IMAGE_URI, imageUri)
+        editor.apply()
+    }
+
+    fun getImageUri(context: Context): String? {
+        val sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return sharedPreferences.getString(KEY_IMAGE_URI, null)
     }
 }
