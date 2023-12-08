@@ -70,10 +70,12 @@ class TaskListFragment : Fragment() {
         binding!!.myCollectionsRv.layoutManager = LinearLayoutManager(requireContext())
 
         homeViewModel.allTasks?.observe(viewLifecycleOwner, Observer { tasks ->
+            if (!tasks?.isEmpty()!!) {
+                binding?.calendarImage?.visibility = View.INVISIBLE
+            }
             taskListAdapter.submitList(tasks)
         })
 
-        // Floating action button click listener
         binding!!.fabBtn.setOnClickListener {
             startActivity(Intent(requireContext(), AddNewTaskActivity::class.java))
         }

@@ -90,7 +90,7 @@ class EditTaskActivity : AppCompatActivity() {
     }
 
     private fun loadTaskData() {
-        taskViewModel.getTaskById(taskId).observe(this, { task ->
+        taskViewModel.getTaskById(taskId).observe(this) { task ->
             task?.let {
                 editTextTitle.setText(it.title)
                 editTextDescription.setText(it.description)
@@ -105,13 +105,15 @@ class EditTaskActivity : AppCompatActivity() {
 
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = it.dueDate
-                val formattedDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
-                val formattedTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(calendar.time)
+                val formattedDate =
+                    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
+                val formattedTime =
+                    SimpleDateFormat("HH:mm", Locale.getDefault()).format(calendar.time)
                 textViewDueDate.text = formattedDate
                 textViewDueTime.text = formattedTime
                 // For spinner, set the appropriate category. You might need to set up an adapter for the spinner.
             }
-        })
+        }
     }
 
     private fun saveTask() {
@@ -131,7 +133,7 @@ class EditTaskActivity : AppCompatActivity() {
         if (date.isNotEmpty() && time.isNotEmpty()) {
             val dueDate = parseDate(date, time)
 
-            taskViewModel.getTaskById(taskId).observe(this, { task ->
+            taskViewModel.getTaskById(taskId).observe(this) { task ->
                 task?.let {
                     val updatedTask = Task(
                         id = taskId,
@@ -146,7 +148,7 @@ class EditTaskActivity : AppCompatActivity() {
                     taskViewModel.update(updatedTask)
                     finish()
                 }
-            })
+            }
         } else {
             Toast.makeText(this, "Date and time are required", Toast.LENGTH_SHORT).show()
         }
