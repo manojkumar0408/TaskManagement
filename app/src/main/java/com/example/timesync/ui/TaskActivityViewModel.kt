@@ -28,6 +28,7 @@ class TaskActivityViewModel(application: Application) : AndroidViewModel(applica
         return repository.getAllTasksByPriority(priority)
     }
 
+
 //    val allTasksByDateASC: LiveData<List<Any>>
 //        get() = repository.getAllTasksByDateASC()
 //    val allTasksByDateDESC: LiveData<List<Any>>

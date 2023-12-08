@@ -83,6 +83,7 @@ class SignUpActivity : AppCompatActivity() {
                                 Toast.makeText(this, "Welcome ${FirstName}", Toast.LENGTH_SHORT)
                                     .show()
                                 val intent = Intent(this, TasksMainActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                                 startActivity(intent)
                             } else {
                                 Toast.makeText(this, task.exception.toString(), Toast.LENGTH_SHORT)

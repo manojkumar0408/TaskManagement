@@ -69,12 +69,19 @@ class TaskDetailActivity : AppCompatActivity() {
         val taskId = intent.getLongExtra("TASK_ID", -1L)
         if (taskId != -1L) {
             viewModel.getTaskById(taskId).observe(this, Observer { task ->
-                // Update the UI with the task details
                 toolbar.title = task.title
                 displayTaskDetails(task)
             })
         }
-
+        val notificationTaskId = intent.getLongExtra(Constants.ID, -1L)
+        if (notificationTaskId != -1L) {
+            viewModel.getTaskById(notificationTaskId).observe(this, Observer { task ->
+                if (task != null) {
+                    toolbar.title = task.title
+                    displayTaskDetails(task)
+                }
+            })
+        }
     }
 
     private fun displayTaskDetails(task: Task?) {

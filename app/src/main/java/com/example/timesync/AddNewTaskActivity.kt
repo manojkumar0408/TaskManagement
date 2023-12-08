@@ -5,6 +5,7 @@ import android.app.AlarmManager.RTC_WAKEUP
 import android.app.PendingIntent
 import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -208,6 +209,9 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         alertIntent.putExtra(Constants.EXTRA_ALERTMILLI, timeMillis)
         alertIntent.putExtra(Constants.STATUS, status)
         alertIntent.putExtra(Constants.CATEGORY, category)
+        val mediaPlayer = MediaPlayer.create(this, R.raw.alarm)
+        alertIntent.putExtra(Constants.EXTRA_RINGTONE, mediaPlayer.toString())
+
         val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
         val pendingIntent = PendingIntent.getBroadcast(
             this, 1, alertIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT

@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.os.Build
 
 class TImeSyncApplication : Application() {
-
     override fun onCreate() {
         super.onCreate()
         createNotificationChannels()

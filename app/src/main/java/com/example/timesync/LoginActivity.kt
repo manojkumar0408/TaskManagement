@@ -1,19 +1,22 @@
 package com.example.timesync
 
+import android.Manifest
 import android.app.ActivityOptions
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.util.Patterns
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.timesync.databinding.ActivityLoginPageBinding
 import com.example.timesync.db.FirebaseDatabaseManager
-import com.example.timesync.db.User
 import com.example.timesync.ui.SignUpActivity
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Firebase
@@ -23,8 +26,9 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 class LoginActivity : AppCompatActivity() {
-
     private lateinit var appBar: ActionBar
+
+    private val PERMISSION_CODE = 1001
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityLoginPageBinding
     private val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
@@ -39,10 +43,14 @@ class LoginActivity : AppCompatActivity() {
         // Get support action bar
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         auth = Firebase.auth
+        if(!getPermissions())
+            requestGalleryPermission()
 
         if (SharedPref().hasValues(applicationContext)) {
             val signUpIntent = Intent(this, TasksMainActivity::class.java)
+            signUpIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(signUpIntent)
+            finish()
         }
 
         val email = findViewById<TextInputLayout>(R.id.emailAddress)
@@ -80,6 +88,27 @@ class LoginActivity : AppCompatActivity() {
         return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
     }
 
+    private fun getPermissions(): Boolean {
+        Log.d("permissiom", "check Gall")
+        return ContextCompat.checkSelfPermission(
+            this, Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestGalleryPermission() {
+        ActivityCompat.requestPermissions(
+            this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_CODE
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        }
+    }
+
     private fun login(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
@@ -96,7 +125,9 @@ class LoginActivity : AppCompatActivity() {
                             val animationBundle = ActivityOptions.makeCustomAnimation(
                                 this, R.anim.slide_in_right, R.anim.slide_out_left
                             ).toBundle()
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                             startActivity(intent, animationBundle)
+                            finish()
                         }
                     }
                 }
