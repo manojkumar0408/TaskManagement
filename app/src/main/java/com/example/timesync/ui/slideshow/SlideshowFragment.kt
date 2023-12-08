@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.CalendarView.OnDateChangeListener
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.timesync.databinding.FragmentSlideshowBinding
+
 
 class SlideshowFragment : Fragment() {
 
@@ -20,7 +22,7 @@ class SlideshowFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val slideshowViewModel =
             ViewModelProvider(this).get(SlideshowViewModel::class.java)
@@ -28,10 +30,9 @@ class SlideshowFragment : Fragment() {
         _binding = FragmentSlideshowBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textSlideshow
-        slideshowViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        binding.calendarView.setOnDateChangeListener(OnDateChangeListener { view, year, month, dayOfMonth -> // display the selected date by using a toast
+            Toast.makeText(requireContext(), "$dayOfMonth/$month/$year", Toast.LENGTH_LONG)                .show()
+        })
         return root
     }
 

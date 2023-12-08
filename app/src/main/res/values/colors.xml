@@ -37,5 +37,15 @@
     <color name="MediumBlue">#2f889e</color>
     <color name="LightBlue">#55a2b5</color>
     <color name="LighterRed">#ff9999</color>
-
+    <color name="mediumGreen">#5EBE45</color>
+    <color name="lightGreen">#8DEE94</color>
+    <color name="TealGreen">#00796B</color>
+    <color name="MintGreen">#4DB6AC</color>
+    <color name="greenPrimary">#4CAF50</color>
+    <color name="limeGreenAccent">#8BC34A</color>
+    <color name="paleBlueGreenBackground">#E0F2F1</color>
+    <color name="textBlack">#212121</color>
+    <color name="springGreenPrimary">#8CC84B</color>
+    <color name="limeYellowAccent">#B5E355</color>
+    <color name="textDarkGray">#333333</color>
 </resources>
