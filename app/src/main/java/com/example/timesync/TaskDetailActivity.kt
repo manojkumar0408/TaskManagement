@@ -39,8 +39,6 @@ class TaskDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         binding = ActivityTaskDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         notesEditText = findViewById(R.id.notes_text)
@@ -89,7 +87,7 @@ class TaskDetailActivity : AppCompatActivity() {
 
     private fun displayTaskDetails(task: Task?) {
         if (task != null) {
-            notesEditText?.setText(task.notes)
+            notesEditText?.text = task.notes
             descriptionTextView?.text = task.description
             dueDateTextView?.text = formatDate(task.dueDate)
             priorityTextView?.text = task.priority
@@ -142,9 +140,6 @@ class TaskDetailActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         saveNotes()
-        //  AppState.saveLastVisitedPage(this, "TaskDetailActivity")
-
-
     }
 
     private fun saveNotes() {

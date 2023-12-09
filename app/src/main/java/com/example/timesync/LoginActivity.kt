@@ -118,6 +118,7 @@ class LoginActivity : AppCompatActivity() {
                             SharedPref().saveUserInfo(
                                 this, it.userId, it.username, it.firstName, it.lastName, it.email
                             );
+                            SharedPref().saveLoginState(applicationContext, true)
                             Toast.makeText(this, "Welcome ${user?.email}", Toast.LENGTH_SHORT)
                                 .show()
                             val intent = Intent(this, TasksMainActivity::class.java)

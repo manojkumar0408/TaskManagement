@@ -2,6 +2,7 @@ package com.example.timesync
 
 import android.app.AlarmManager
 import android.app.AlarmManager.RTC_WAKEUP
+import android.app.AlertDialog
 import android.app.PendingIntent
 import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Intent
@@ -26,6 +27,8 @@ import com.example.timesync.databinding.ActivityAddNewTaskBinding
 import com.example.timesync.db.Task
 import com.example.timesync.db.TaskRepository
 import com.example.timesync.ui.TaskActivityViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -125,8 +128,49 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
             Toast.makeText(this, "Please insert a Date and Time", Toast.LENGTH_SHORT).show()
             return
         } else {
+            checkTasksWithin15Minutes(title, description, date, time, category) { isConflict ->
+                if (isConflict) {
+                    showConfirmationDialog(title, description, date, time, category)
+                } else {
+                    insertData(title, description, date, time, category)
+                }
+            }
+        }
+    }
+
+    private fun checkTasksWithin15Minutes(
+        title: String,
+        description: String,
+        date: String,
+        time: String,
+        category: String,
+        callback: (Boolean) -> Unit
+    ) {
+        val selectedTimeMillis = convertTimeInMillis()
+        taskActivityViewModel.getAllTasks().observe(this) { allTasks ->
+            for (task in allTasks) {
+                val taskTimeMillis = task.dueDate
+                if (abs(taskTimeMillis - selectedTimeMillis) <= 15 * 60 * 1000) {
+                    callback(true)
+                    return@observe
+                }
+            }
+            callback(false)
+        }
+    }
+
+    private fun showConfirmationDialog(
+        title: String, description: String, date: String, time: String, category: String
+    ) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle(applicationContext.getString(R.string.confirm_task))
+        alertDialogBuilder.setMessage(applicationContext.getString(R.string.message_15_mins))
+        alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
             insertData(title, description, date, time, category)
         }
+        alertDialogBuilder.setNegativeButton("No") { _, _ -> }
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 
     private fun insertData(
@@ -137,9 +181,9 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         var task: Task?
         if (date != application.getString(R.string.task_date) && time != application.getString(R.string.task_time) && radioChoice != null) {
             timeMillis = convertTimeInMillis()
-            task = Task(id, title, description, radioChoice!!, "college", timeMillis, category)
+            task = Task(id, title, description, radioChoice!!, "pending", timeMillis, category)
         } else {
-            task = Task(id, title, description, radioChoice!!, "college", 0L, category)
+            task = Task(id, title, description, radioChoice!!, "pending", 0L, category)
         }
         val repository = TaskRepository(application)
         repository.insert(
@@ -147,13 +191,41 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         ) { result ->
             newTaskID = result
             Toast.makeText(applicationContext, "Task Saved", Toast.LENGTH_SHORT).show()
+            insertIntoFirebase(task)
             if (timeMillis != null) {
                 convertTimeInMillis()
-                startAlarm(id, title, description, radioChoice, "college", timeMillis, category)
+                startAlarm(id, title, description, radioChoice, "pending", timeMillis, category)
             }
             finish()
         }
     }
+
+    private fun insertIntoFirebase(
+        newTask: Task
+    ) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            val userTasksReference = databaseReference.child("users").child(userId).child("tasks")
+            val taskReference = userTasksReference.push()
+            taskReference.setValue(newTask).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(
+                        applicationContext,
+                        "Task Saved to Server",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        applicationContext,
+                        "Failed to Save Task: ${task.exception}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
 
     override fun onTimeSet(p0: TimePicker?, p1: Int, p2: Int) {
         cal[Calendar.HOUR_OF_DAY] = p1

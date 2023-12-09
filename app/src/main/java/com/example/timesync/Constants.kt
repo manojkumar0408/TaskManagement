@@ -1,6 +1,7 @@
 package com.example.timesync
 
 object Constants {
+    val KEY_LOGIN_STATE: String?="Loginnn"
     const val POSTPONE: String = "postpone"
     const val ONGOING: String = "Ongoing"
     const val ACTION_STOP_ALARM: String = "Stop_alarm"

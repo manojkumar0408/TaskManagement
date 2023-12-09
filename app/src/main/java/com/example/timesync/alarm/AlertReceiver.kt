@@ -51,7 +51,6 @@ class AlertReceiver : BroadcastReceiver() {
         category: String?
     ) {
         Log.i("actionss", "notification")
-
         val intent = Intent(context, TaskDetailActivity::class.java)
         intent.putExtra(Constants.ID, id)
         intent.putExtra(Constants.TITLE, title)

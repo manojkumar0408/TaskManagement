@@ -73,4 +73,16 @@ class SharedPref {
         val sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         return sharedPreferences.getString(KEY_IMAGE_URI, null)
     }
+
+    fun saveLoginState(context: Context, isLoggedIn: Boolean) {
+        val sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean(Constants.KEY_LOGIN_STATE, isLoggedIn)
+        editor.apply()
+    }
+
+    fun getLoginState(context: Context): Boolean {
+        val sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return sharedPreferences.getBoolean(Constants.KEY_LOGIN_STATE, false)
+    }
 }
