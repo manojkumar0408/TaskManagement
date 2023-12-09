@@ -58,4 +58,5 @@
     <string name="category">category</string>
     <string name="confirm_task">Confirm Save Task</string>
     <string name="message_15_mins">"There is a task scheduled within 15 minutes of the selected time. Do you still want to save this task?"</string>
+    <string name="calender_view">Calender View</string>
 </resources>

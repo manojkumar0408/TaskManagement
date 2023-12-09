@@ -56,6 +56,7 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
     implementation("com.google.firebase:firebase-firestore-ktx:24.10.0")
     implementation("androidx.media3:media3-common:1.2.0")
+    implementation("com.mikhaellopez:circularimageview:4.3.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -69,4 +70,5 @@ dependencies {
 
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
     implementation ("jp.wasabeef:recyclerview-animators:4.0.2")
+    implementation("com.mikhaellopez:circularimageview:3.0.2")
 }

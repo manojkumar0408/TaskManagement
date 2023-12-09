@@ -2,6 +2,7 @@ package com.example.timesync
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -60,9 +61,24 @@ class TasksMainActivity : AppCompatActivity() {
         val email = header.findViewById<TextView>(R.id.nav_email)
         val imageView = header.findViewById<ImageView>(R.id.nav_imageView)
         val sharedPref = SharedPref().getUserInfo(applicationContext)
+        val sharePref = SharedPref()
         if (sharedPref != null) {
             name.text = "${sharedPref.firstName} ${sharedPref.lastName}"
             email.text = sharedPref.email
+            if (sharePref.getImageUri(this) != "imageUri"){
+                var img = sharePref.getImageUri(this)
+                img = Uri.parse(img.toString()).toString()
+                header.findViewById<ImageView>(R.id.nav_imageView).setImageURI(Uri.parse(img))
+            }
+        }
+    }
+
+    fun updateNavView(){
+        val sharePref = SharedPref()
+        if (sharePref.getImageUri(this) != "imageUri"){
+            var img = sharePref.getImageUri(this)
+            img = Uri.parse(img.toString()).toString()
+            findViewById<ImageView>(R.id.nav_imageView).setImageURI(Uri.parse(img))
         }
     }
 

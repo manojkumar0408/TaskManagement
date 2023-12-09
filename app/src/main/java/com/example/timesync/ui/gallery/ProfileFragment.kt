@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.timesync.SharedPref
+import com.example.timesync.TasksMainActivity
 import com.example.timesync.databinding.FragmentProfileBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -153,7 +154,7 @@ class ProfileFragment : Fragment() {
         binding.profileIcon.setImageURI(imageUri)
         val SharedPref = SharedPref()
         SharedPref.saveImageUri(requireContext(), imageUri.toString())
-
+        Toast.makeText(context, "Profile picture updated successfully", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
