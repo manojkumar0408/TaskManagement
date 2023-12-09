@@ -25,7 +25,7 @@ class EditTaskActivity : AppCompatActivity() {
     private lateinit var spinnerCategory: Spinner
     private lateinit var buttonSave: Button
     private lateinit var taskViewModel: HomeViewModel
-    private lateinit var textViewDueTime :TextView
+    private lateinit var textViewDueTime: TextView
     private var taskId: Long = 0
     private var year: String? = null
     private var month: String? = null
@@ -56,7 +56,7 @@ class EditTaskActivity : AppCompatActivity() {
         editTextDescription = findViewById(R.id.editTextTaskDescription)
         radioGroupPriority = findViewById(R.id.radio_group)
         textViewDueDate = findViewById(R.id.text_view_date)
-       // spinnerCategory = findViewById(R.id.categories_spinner)
+        // spinnerCategory = findViewById(R.id.categories_spinner)
         buttonSave = findViewById(R.id.save_task_btn)
         textViewDueTime = findViewById(R.id.text_view_time)
 
@@ -73,8 +73,15 @@ class EditTaskActivity : AppCompatActivity() {
                 { _, year, monthOfYear, dayOfMonth ->
                     val selectedDate = Calendar.getInstance()
                     selectedDate.set(year, monthOfYear, dayOfMonth)
-                    textViewDueDate.text = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(selectedDate.time)
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+                    textViewDueDate.text = SimpleDateFormat(
+                        "yyyy-MM-dd",
+                        Locale.getDefault()
+                    ).format(selectedDate.time)
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
             datePickerDialog.show()
         }
         textViewDueTime.setOnClickListener {
@@ -83,8 +90,10 @@ class EditTaskActivity : AppCompatActivity() {
                 { _, hourOfDay, minute ->
                     calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
                     calendar.set(Calendar.MINUTE, minute)
-                    textViewDueTime.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(calendar.time)
-                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true) // 'true' for 24-hour time format
+                    textViewDueTime.text =
+                        SimpleDateFormat("HH:mm", Locale.getDefault()).format(calendar.time)
+                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true
+            ) // 'true' for 24-hour time format
             timePickerDialog.show()
         }
     }
@@ -153,6 +162,7 @@ class EditTaskActivity : AppCompatActivity() {
             Toast.makeText(this, "Date and time are required", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun parseDate(dateStr: String, timeStr: String): Long {
         val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
         return format.parse("$dateStr $timeStr")?.time ?: System.currentTimeMillis()
@@ -164,5 +174,14 @@ class EditTaskActivity : AppCompatActivity() {
     }
 
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("selectedDate", textViewDueDate.text.toString())
+        outState.putString("selectedTime", textViewDueTime.text.toString())
+    }
 
+    private fun restoreSavedState(savedInstanceState: Bundle) {
+        textViewDueTime.text = savedInstanceState.getString("selectedDate", "")
+        textViewDueTime.text = savedInstanceState.getString("selectedTime", "")
+    }
 }

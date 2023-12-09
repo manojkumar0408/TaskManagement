@@ -64,6 +64,9 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         // Get support action bar
         //appBar = supportActionBar?
         //appBar.title="Add New Task"
+        if (savedInstanceState != null) {
+            restoreSavedState(savedInstanceState)
+        }
 
         taskActivityViewModel = ViewModelProvider(this)[TaskActivityViewModel::class.java]
         initialise()
@@ -296,9 +299,7 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
             this, 1, alertIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         alarmManager.setExact(RTC_WAKEUP, timeMillis, pendingIntent)
-
     }
-
 
     override fun onDateSet(year: Int, month: Int, dayOfMonth: Int) {
         val selectedDate = Calendar.getInstance()
@@ -317,6 +318,17 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.categoriesSpin.adapter = adapter
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("selectedDate", binding.textViewDate.text.toString())
+        outState.putString("selectedTime", binding.textViewTime.text.toString())
+    }
+
+    private fun restoreSavedState(savedInstanceState: Bundle) {
+        binding.textViewDate.text = savedInstanceState.getString("selectedDate", "")
+        binding.textViewTime.text = savedInstanceState.getString("selectedTime", "")
     }
 
 }

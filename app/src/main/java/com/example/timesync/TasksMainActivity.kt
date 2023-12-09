@@ -5,13 +5,18 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewTreeObserver
+import android.view.ViewTreeObserver.OnPreDrawListener
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.net.toUri
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -20,7 +25,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.timesync.databinding.ActivityTasksMainBinding
 import com.example.timesync.ui.home.HomeViewModel
-import com.example.timesync.ui.home.TaskListFragment
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 
@@ -41,6 +45,7 @@ class TasksMainActivity : AppCompatActivity() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setSupportActionBar(binding.appBarTasksMain.toolbar)
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+
         binding.appBarTasksMain.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
@@ -65,20 +70,22 @@ class TasksMainActivity : AppCompatActivity() {
         if (sharedPref != null) {
             name.text = "${sharedPref.firstName} ${sharedPref.lastName}"
             email.text = sharedPref.email
-            if (sharePref.getImageUri(this) != "imageUri"){
+            if (sharePref.getImageUri(this) != null) {
                 var img = sharePref.getImageUri(this)
                 img = Uri.parse(img.toString()).toString()
-                header.findViewById<ImageView>(R.id.nav_imageView).setImageURI(Uri.parse(img))
+                imageView.setImageURI(Uri.parse(img))
+            } else {
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.person));
             }
         }
-    }
 
-    fun updateNavView(){
-        val sharePref = SharedPref()
-        if (sharePref.getImageUri(this) != "imageUri"){
-            var img = sharePref.getImageUri(this)
-            img = Uri.parse(img.toString()).toString()
-            findViewById<ImageView>(R.id.nav_imageView).setImageURI(Uri.parse(img))
+        homeViewModel.imageUri.observe(this) {
+            Log.d("feinie", "etter")
+            if (homeViewModel.getImageUri() != null) imageView.setImageURI(
+                homeViewModel.getImageUri()?.toUri()
+            ) else {
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.person));
+            }
         }
     }
 
@@ -108,4 +115,9 @@ class TasksMainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
 }

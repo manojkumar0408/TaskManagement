@@ -1,6 +1,7 @@
 package com.example.timesync.ui.gallery
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.ContentResolver
@@ -20,9 +21,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.timesync.R
 import com.example.timesync.SharedPref
 import com.example.timesync.TasksMainActivity
 import com.example.timesync.databinding.FragmentProfileBinding
+import com.example.timesync.ui.TaskActivityViewModel
+import com.example.timesync.ui.home.HomeViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -45,7 +49,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private var storage: FirebaseStorage? = null
     private var storageReference: StorageReference? = null
-
+    private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
@@ -54,6 +58,8 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
         var user = Firebase.auth.currentUser
+        homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
+
         storage = FirebaseStorage.getInstance();
         storageReference = storage?.getReference()
         Log.d("storafe", storageReference.toString())
@@ -77,6 +83,7 @@ class ProfileFragment : Fragment() {
         return root
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val sharedPref = SharedPref()
@@ -89,21 +96,22 @@ class ProfileFragment : Fragment() {
 
         if (checkGalleryPermission()) {
             var img = sharedPref.getImageUri(requireContext())
-            img = Uri.parse(img.toString()).toString()
-            binding.profileIcon.setImageURI(Uri.parse(img))
+            if (img != null) {
+                img = Uri.parse(img.toString()).toString()
+                binding.profileIcon.setImageURI(Uri.parse(img))
+            } else binding.profileIcon.setImageDrawable(getResources().getDrawable(R.drawable.person))
+
+        } else {
+            binding.profileIcon.setImageDrawable(getResources().getDrawable(R.drawable.person))
         }
     }
 
     private fun handleCameraButtonClick() {
-//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-//            openGallery()
-//        } else {
         if (checkGalleryPermission()) {
             openGallery()
         } else {
             requestGalleryPermission()
         }
-        // }
     }
 
     private fun checkGalleryPermission(): Boolean {
@@ -129,8 +137,10 @@ class ProfileFragment : Fragment() {
             val sharedPref = SharedPref()
             var img = sharedPref.getImageUri(requireContext())
             if (img != null) {
-                img = Uri.parse(img.toString()).toString()
+                img = Uri.parse(img).toString()
                 binding.profileIcon.setImageURI(Uri.parse(img))
+            } else {
+                binding.profileIcon.setImageDrawable(getResources().getDrawable(R.drawable.person));
             }
         }
     }
@@ -155,6 +165,7 @@ class ProfileFragment : Fragment() {
         val SharedPref = SharedPref()
         SharedPref.saveImageUri(requireContext(), imageUri.toString())
         Toast.makeText(context, "Profile picture updated successfully", Toast.LENGTH_SHORT).show()
+        homeViewModel.setImageUri(filePath.toString())
     }
 
     override fun onDestroyView() {
@@ -187,32 +198,5 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    fun storeInFirebase(uri: Uri) {
-        val userID = FirebaseAuth.getInstance().currentUser?.uid
-        val storageRef = FirebaseStorage.getInstance().reference
-        val profilePicRef = storageRef.child("images/${userID}.jpg")
-
-        val uploadTask = profilePicRef.putFile(uri)
-        uploadTask.addOnSuccessListener { taskSnapshot: UploadTask.TaskSnapshot? -> }
-            .addOnFailureListener { exception: Exception? ->
-                // Handle unsuccessful upload
-                Toast.makeText(
-                    requireContext(), "Profile picture upload failed.", Toast.LENGTH_SHORT
-                ).show()
-            }
-        val db = FirebaseFirestore.getInstance()
-        val usersCollection = db.collection("users")
-        val user: MutableMap<String, Any> = HashMap()
-        user["name"] = "manoj"
-        user["profilePicUrl"] = profilePicRef.path // Store the path, not the direct download URL
-        usersCollection.document().set(user)
-
-    }
-
-    private fun getFileExtension(uri: Uri): String? {
-        val contentResolver: ContentResolver = requireContext().getContentResolver()
-        val mime = MimeTypeMap.getSingleton()
-        return mime.getExtensionFromMimeType(contentResolver.getType(uri))
-    }
 
 }

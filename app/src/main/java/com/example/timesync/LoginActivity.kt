@@ -82,6 +82,10 @@ class LoginActivity : AppCompatActivity() {
                 login(userEmail, userPassword)
             }
         }
+
+        if (savedInstanceState != null) {
+            restoreSavedState(savedInstanceState)
+        }
     }
 
     private fun isValidEmail(target: CharSequence?): Boolean {
@@ -139,6 +143,17 @@ class LoginActivity : AppCompatActivity() {
                 ).show()
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("emailAddress", binding.emailAddress.editText?.text.toString())
+        outState.putString("password", binding.password.editText?.text.toString())
+    }
+
+    private fun restoreSavedState(savedInstanceState: Bundle) {
+        binding.emailAddress.editText?.setText(savedInstanceState.getString("emailAddress", ""))
+        binding.password.editText?.setText(savedInstanceState.getString("password", ""))
     }
 }
 

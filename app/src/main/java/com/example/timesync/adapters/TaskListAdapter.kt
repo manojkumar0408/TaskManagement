@@ -1,14 +1,17 @@
 package com.example.timesync.adapters
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,19 +20,23 @@ import com.example.timesync.db.Task
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 class TaskListAdapter(
     private val onDeleteClickListener: (Task) -> Unit,
     private val onEditClickListener: (Task) -> Unit,
-    private val onItemClickListener: (Task) -> Unit
+    private val onItemClickListener: (Task) -> Unit,
+    val context: Context?
 ) : ListAdapter<Task, TaskListAdapter.ViewHolder>(TaskDiffCallback()) {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val cardView: CardView = itemView.findViewById(R.id.my_idContainer)
         val priorityStarImageView: ImageView = itemView.findViewById(R.id.imagePriorityStar)
         val titleTextView: TextView = itemView.findViewById(R.id.textTitle)
         val descriptionTextView: TextView = itemView.findViewById(R.id.textDescription)
         val dueDateTextView: TextView = itemView.findViewById(R.id.textDueDate)
         val deleteImageView: ImageView = itemView.findViewById(R.id.imageDelete)
-        val editImageView: ImageView = itemView.findViewById(R.id.imageEdit) // Added ImageView for edit
+        val editImageView: ImageView =
+            itemView.findViewById(R.id.imageEdit) // Added ImageView for edit
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,7 +46,12 @@ class TaskListAdapter(
         return ViewHolder(itemView)
 
     }
-    fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+    fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.my_collections_Rv)
         // Rest of your code
@@ -76,8 +88,13 @@ class TaskListAdapter(
             "High" -> R.color.orange
             else -> R.color.white
         }
-        holder.priorityStarImageView.setColorFilter(ContextCompat.getColor(holder.itemView.context, priorityColor))
-
+        holder.priorityStarImageView.setColorFilter(
+            ContextCompat.getColor(
+                holder.itemView.context,
+                priorityColor
+            )
+        )
+        setAnimation(holder.cardView, position)
 
     }
 
@@ -98,5 +115,12 @@ class TaskListAdapter(
         calendar.timeInMillis = milliSeconds
         val date: String = formatter.format(calendar.time)
         return date.split(" ").toTypedArray()
+    }
+
+    private fun setAnimation(viewToAnimate: View, position: Int) {
+        val animation: Animation =
+            AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left)
+        animation.duration = (position * 50 + 1000).toLong()
+        viewToAnimate.startAnimation(animation)
     }
 }
