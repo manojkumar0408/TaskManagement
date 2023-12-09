@@ -155,20 +155,27 @@ class TaskListFragment : Fragment() {
     }
 
     private fun filterByPriority(selectedPriority: String) {
-        if (!selectedPriority.equals("All")) {
-            homeViewModel.getAllTasksByPriority(selectedPriority)?.observe(
-                requireActivity()
-            ) { value -> taskListAdapter.submitList(value) }
-        }
-        else{
-            homeViewModel.allTasks?.observe(viewLifecycleOwner, Observer { tasks ->
-                if (!tasks?.isEmpty()!!) {
-                    binding?.calendarImage?.visibility = View.INVISIBLE
+        if (selectedPriority != "All") {
+            homeViewModel.getAllTasksByPriority(selectedPriority)?.observe(viewLifecycleOwner) { tasks ->
+                if (tasks.isNullOrEmpty()) {
+                    Toast.makeText(context, "No tasks found with priority $selectedPriority", Toast.LENGTH_SHORT).show()
+                } else {
+                    taskListAdapter.submitList(tasks)
                 }
-                taskListAdapter.submitList(tasks)
+            }
+        } else {
+            homeViewModel.allTasks?.observe(viewLifecycleOwner, Observer { tasks ->
+                if (tasks.isNullOrEmpty()) {
+                    binding?.calendarImage?.visibility = View.VISIBLE
+                    Toast.makeText(context, "No tasks found", Toast.LENGTH_SHORT).show()
+                } else {
+                    binding?.calendarImage?.visibility = View.INVISIBLE
+                    taskListAdapter.submitList(tasks)
+                }
             })
         }
     }
+
 
     private fun sortByDueDate() {
         homeViewModel.getAllTaskInASC()?.observe(
