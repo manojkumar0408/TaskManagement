@@ -137,9 +137,9 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         var task: Task?
         if (date != application.getString(R.string.task_date) && time != application.getString(R.string.task_time) && radioChoice != null) {
             timeMillis = convertTimeInMillis()
-            task = Task(id, title, description, radioChoice!!, "college", timeMillis, "category")
+            task = Task(id, title, description, radioChoice!!, "college", timeMillis, category)
         } else {
-            task = Task(id, title, description, radioChoice!!, "college", 0L, "category")
+            task = Task(id, title, description, radioChoice!!, "college", 0L, category)
         }
         val repository = TaskRepository(application)
         repository.insert(
@@ -149,7 +149,7 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
             Toast.makeText(applicationContext, "Task Saved", Toast.LENGTH_SHORT).show()
             if (timeMillis != null) {
                 convertTimeInMillis()
-                startAlarm(id, title, description, radioChoice, "college", timeMillis, "category")
+                startAlarm(id, title, description, radioChoice, "college", timeMillis, category)
             }
             finish()
         }

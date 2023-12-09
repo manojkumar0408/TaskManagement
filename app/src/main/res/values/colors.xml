@@ -48,4 +48,6 @@
     <color name="springGreenPrimary">#8CC84B</color>
     <color name="limeYellowAccent">#B5E355</color>
     <color name="textDarkGray">#333333</color>
+    <color name="yellow">#FFC300</color>
+    <color name="orange">#FF6633</color>
 </resources>

@@ -68,4 +68,5 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
 
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.1.0")
+    implementation ("jp.wasabeef:recyclerview-animators:4.0.2")
 }

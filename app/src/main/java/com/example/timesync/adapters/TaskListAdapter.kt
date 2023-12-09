@@ -1,11 +1,14 @@
 package com.example.timesync.adapters
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +24,7 @@ class TaskListAdapter(
 ) : ListAdapter<Task, TaskListAdapter.ViewHolder>(TaskDiffCallback()) {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val priorityStarImageView: ImageView = itemView.findViewById(R.id.imagePriorityStar)
         val titleTextView: TextView = itemView.findViewById(R.id.textTitle)
         val descriptionTextView: TextView = itemView.findViewById(R.id.textDescription)
         val dueDateTextView: TextView = itemView.findViewById(R.id.textDueDate)
@@ -31,8 +35,17 @@ class TaskListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.task_list_item, parent, false)
+
         return ViewHolder(itemView)
+
     }
+    fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.my_collections_Rv)
+        // Rest of your code
+        return view
+    }
+
 
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -56,6 +69,15 @@ class TaskListAdapter(
         holder.itemView.setOnClickListener {
             onItemClickListener.invoke(currentTask)
         }
+
+        val priorityColor = when (currentTask.priority) {
+            "Low" -> R.color.greenPrimary
+            "Medium" -> R.color.yellow
+            "High" -> R.color.orange
+            else -> R.color.white
+        }
+        holder.priorityStarImageView.setColorFilter(ContextCompat.getColor(holder.itemView.context, priorityColor))
+
 
     }
 
