@@ -5,12 +5,15 @@ import android.app.AlarmManager.RTC_WAKEUP
 import android.app.AlertDialog
 import android.app.PendingIntent
 import android.app.TimePickerDialog.OnTimeSetListener
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.service.autofill.Validators.or
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.TimePicker
 import android.widget.Toast
@@ -331,4 +334,11 @@ class AddNewTaskActivity : AppCompatActivity(), DatePickerFragment.OnDateSetList
         binding.textViewTime.text = savedInstanceState.getString("selectedTime", "")
     }
 
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (currentFocus != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+        }
+        return super.dispatchTouchEvent(ev)
+    }
 }

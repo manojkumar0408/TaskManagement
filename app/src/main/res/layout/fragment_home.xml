@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/task_list_fragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@mipmap/backdrop2">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/bg_top"

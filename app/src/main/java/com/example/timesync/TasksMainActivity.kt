@@ -87,6 +87,13 @@ class TasksMainActivity : AppCompatActivity() {
                 imageView.setImageDrawable(getResources().getDrawable(R.drawable.person));
             }
         }
+
+        homeViewModel.user_Details.observe(this) {
+            Log.d("feinie", "etter")
+            if (homeViewModel.getUserDetails() != null)
+                name.text = homeViewModel.getUserDetails()
+
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

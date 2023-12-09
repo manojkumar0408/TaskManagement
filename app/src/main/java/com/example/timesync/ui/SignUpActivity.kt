@@ -50,13 +50,15 @@ class SignUpActivity : AppCompatActivity() {
             val userLastName = lname.text.toString()
             val userUsername = username.text.toString()
             val userPassword = password.text.toString()
-
-            if (userEmail.isNotBlank() && userFirstName.isNotBlank() && userLastName.isNotBlank() && userUsername.isNotBlank() && userPassword.isNotBlank()) {
-                signup(userEmail, userPassword, userFirstName, userLastName, userUsername)
-            } else if (!isValidEmail(userEmail)) {
+            if (!isValidEmail(userEmail)) {
                 Toast.makeText(
                     this, resources.getString(R.string.email_not_valid), Toast.LENGTH_SHORT
                 ).show()
+            } else if (userPassword.length <= 6)
+                Toast.makeText(this, "password should be atleast 6 characters", Toast.LENGTH_SHORT)
+                    .show()
+            else if (userEmail.isNotBlank() && userFirstName.isNotBlank() && userLastName.isNotBlank() && userUsername.isNotBlank() && userPassword.isNotBlank()) {
+                signup(userEmail, userPassword, userFirstName, userLastName, userUsername)
             } else {
                 Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
             }

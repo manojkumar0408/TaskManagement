@@ -77,6 +77,7 @@ class ProfileFragment : Fragment() {
                 binding.lname.text.toString(),
                 binding.email1.text.toString()
             );
+            homeViewModel.setUserDetails("${binding.fname.text} ${binding.lname.text}")
             Toast.makeText(requireContext(), "Changes saved successfully!", Toast.LENGTH_SHORT)
                 .show();
         }

@@ -48,6 +48,13 @@ class TaskDetailActivity : AppCompatActivity() {
         categoryTextView = findViewById(R.id.set_category_tv)
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
         val toolbar = findViewById<CollapsingToolbarLayout>(R.id.toolbar_layout)
+        val toolbar_set: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar_set)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.title = "Edit Task"
+
+
         binding.voiceNotes.setOnClickListener {
             try {
                 val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -148,5 +155,10 @@ class TaskDetailActivity : AppCompatActivity() {
             val updatedNotes = notesEditText?.text.toString()
             viewModel.updateTaskNotes(taskId, updatedNotes)
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

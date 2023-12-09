@@ -68,6 +68,7 @@ class TaskListFragment : Fragment() {
             startActivity(intent)
         }, context)
 
+
         binding!!.myCollectionsRv.adapter = taskListAdapter
         binding!!.myCollectionsRv.layoutManager = LinearLayoutManager(requireContext())
 

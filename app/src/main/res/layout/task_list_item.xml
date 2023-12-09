@@ -21,13 +21,14 @@
 
         <ImageView
             android:id="@+id/imageEdit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_toStartOf="@id/imageDelete"
             android:clickable="true"
             android:focusable="true"
+            android:padding="5dp"
             android:src="@android:drawable/ic_menu_edit" />
 
 
@@ -38,18 +39,20 @@
             android:layout_alignParentEnd="true"
             android:layout_marginStart="50dp"
             android:layout_marginTop="70dp"
+            android:padding="4dp"
             android:src="@drawable/star"
             app:tint="@color/green" />
 
         <ImageView
             android:id="@+id/imageDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="8dp"
             android:clickable="true"
             android:contentDescription="Delete Icon"
             android:focusable="true"
+            android:padding="5dp"
             android:src="@android:drawable/ic_menu_delete" />
 
         <TextView

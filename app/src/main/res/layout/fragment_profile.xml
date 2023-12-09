@@ -53,6 +53,7 @@
             android:layout_marginRight="40dp"
             android:drawableStart="@drawable/ic_email"
             android:drawablePadding="5dp"
+            android:editable="false"
             android:gravity="start"
             android:hint="email"
             android:inputType="textEmailAddress"

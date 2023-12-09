@@ -3,10 +3,15 @@ package com.example.timesync
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import com.example.timesync.db.Task
 import com.example.timesync.ui.home.HomeViewModel
@@ -37,11 +42,17 @@ class EditTaskActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_task)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
-        supportActionBar?.setDisplayShowHomeEnabled(true);
-        // Get support action bar
-//        appBar = supportActionBar!!
-//        appBar.title="Edit Task"
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+
+        if (savedInstanceState != null) {
+            restoreSavedState(savedInstanceState)
+        }
+
+
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.title = "Edit Task"
 
         taskId = intent.getLongExtra("taskId", -1L)
         if (taskId == -1L) {
@@ -69,13 +80,13 @@ class EditTaskActivity : AppCompatActivity() {
         }
         textViewDueDate.setOnClickListener {
             val calendar = Calendar.getInstance()
-            val datePickerDialog = DatePickerDialog(this,
+            val datePickerDialog = DatePickerDialog(
+                this,
                 { _, year, monthOfYear, dayOfMonth ->
                     val selectedDate = Calendar.getInstance()
                     selectedDate.set(year, monthOfYear, dayOfMonth)
                     textViewDueDate.text = SimpleDateFormat(
-                        "yyyy-MM-dd",
-                        Locale.getDefault()
+                        "yyyy-MM-dd", Locale.getDefault()
                     ).format(selectedDate.time)
                 },
                 calendar.get(Calendar.YEAR),
@@ -86,8 +97,8 @@ class EditTaskActivity : AppCompatActivity() {
         }
         textViewDueTime.setOnClickListener {
             val calendar = Calendar.getInstance()
-            val timePickerDialog = TimePickerDialog(this,
-                { _, hourOfDay, minute ->
+            val timePickerDialog = TimePickerDialog(
+                this, { _, hourOfDay, minute ->
                     calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
                     calendar.set(Calendar.MINUTE, minute)
                     textViewDueTime.text =
@@ -178,10 +189,21 @@ class EditTaskActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putString("selectedDate", textViewDueDate.text.toString())
         outState.putString("selectedTime", textViewDueTime.text.toString())
+        outState.putString("title", textViewDueDate.text.toString())
+        outState.putString("desc", textViewDueDate.text.toString())
     }
 
     private fun restoreSavedState(savedInstanceState: Bundle) {
-        textViewDueTime.text = savedInstanceState.getString("selectedDate", "")
+        textViewDueDate.text = savedInstanceState.getString("selectedDate", "")
         textViewDueTime.text = savedInstanceState.getString("selectedTime", "")
     }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (currentFocus != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
 }
