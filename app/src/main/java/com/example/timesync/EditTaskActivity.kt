@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
@@ -13,11 +13,11 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
+import com.example.timesync.databinding.ActivityEditTaskBinding
 import com.example.timesync.db.Task
 import com.example.timesync.ui.home.HomeViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 class EditTaskActivity : AppCompatActivity() {
@@ -31,6 +31,7 @@ class EditTaskActivity : AppCompatActivity() {
     private lateinit var buttonSave: Button
     private lateinit var taskViewModel: HomeViewModel
     private lateinit var textViewDueTime: TextView
+    private lateinit var binding: ActivityEditTaskBinding
     private var taskId: Long = 0
     private var year: String? = null
     private var month: String? = null
@@ -41,13 +42,10 @@ class EditTaskActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_task)
+        binding = ActivityEditTaskBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         val toolbar: Toolbar = findViewById(R.id.toolbar)
-
-        if (savedInstanceState != null) {
-            restoreSavedState(savedInstanceState)
-        }
-
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -72,7 +70,7 @@ class EditTaskActivity : AppCompatActivity() {
         textViewDueTime = findViewById(R.id.text_view_time)
 
         // Load task data
-        loadTaskData()
+        loadTaskData(savedInstanceState)
 
         // Set save button listener
         buttonSave.setOnClickListener {
@@ -109,12 +107,15 @@ class EditTaskActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadTaskData() {
+    private fun loadTaskData(savedInstanceState: Bundle?) {
         taskViewModel.getTaskById(taskId).observe(this) { task ->
             task?.let {
-                editTextTitle.setText(it.title)
-                editTextDescription.setText(it.description)
-
+                if (savedInstanceState != null) {
+                    restoreSavedState(savedInstanceState)
+                } else {
+                    editTextTitle.setText(it.title)
+                    editTextDescription.setText(it.description)
+                }
                 // Set the priority radio button
                 when (it.priority) {
                     "None" -> radioGroupPriority.check(R.id.radio_priority_none)
@@ -134,6 +135,7 @@ class EditTaskActivity : AppCompatActivity() {
                 // For spinner, set the appropriate category. You might need to set up an adapter for the spinner.
             }
         }
+
     }
 
     private fun saveTask() {
@@ -187,15 +189,18 @@ class EditTaskActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("selectedDate", textViewDueDate.text.toString())
-        outState.putString("selectedTime", textViewDueTime.text.toString())
-        outState.putString("title", textViewDueDate.text.toString())
-        outState.putString("desc", textViewDueDate.text.toString())
+        outState.putString("selectedDate", binding.textViewDate.text.toString())
+        outState.putString("selectedTime", binding.textViewTime.text.toString())
+        outState.putString("title", binding.editTextTaskTitle.text.toString())
+        outState.putString("desc", binding.editTextTaskDescription.text.toString())
     }
 
     private fun restoreSavedState(savedInstanceState: Bundle) {
-        textViewDueDate.text = savedInstanceState.getString("selectedDate", "")
-        textViewDueTime.text = savedInstanceState.getString("selectedTime", "")
+        Log.d("teiteitj", savedInstanceState.getString("title", ""))
+        binding.textViewDate.text = savedInstanceState.getString("selectedDate", "")
+        binding.textViewTime.text = savedInstanceState.getString("selectedTime", "")
+        binding.editTextTaskTitle.setText(savedInstanceState.getString("title", ""))
+        binding.editTextTaskDescription.setText(savedInstanceState.getString("desc", ""))
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
