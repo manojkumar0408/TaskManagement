@@ -42,16 +42,15 @@ class SlideshowFragment : Fragment() {
         val currentDate = Calendar.getInstance()
         binding.calendarView.date = currentDate.timeInMillis
         selectedYear = currentDate.get(Calendar.YEAR)
-        selectedYear = currentDate.get(Calendar.MONTH) + 1
-        selectedYear = currentDate.get(Calendar.DAY_OF_MONTH)
+        selectedMonth = currentDate.get(Calendar.MONTH) + 1
+        selectedDay = currentDate.get(Calendar.DAY_OF_MONTH)
 
         updateTaskList()
 
         binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             selectedYear = year
-            selectedMonth = month + 1 // Calendar months are 0-indexed
+            selectedMonth = month + 1
             selectedDay = dayOfMonth
-
             updateTaskList()
         }
         return root
@@ -76,11 +75,6 @@ class SlideshowFragment : Fragment() {
 
         binding.recyclerView.adapter = taskListAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-//        homeViewModel.allTasks?.observe(viewLifecycleOwner, Observer { tasks ->
-//            val filteredTasks = filterTasksBySelectedDay(tasks)
-//            taskListAdapter.submitList(filteredTasks)
-//        })
     }
 
     private fun updateTaskList() {
