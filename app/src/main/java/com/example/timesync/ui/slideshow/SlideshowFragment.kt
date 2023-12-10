@@ -1,5 +1,6 @@
 package com.example.timesync.ui.slideshow
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timesync.EditTaskActivity
+import com.example.timesync.R
 import com.example.timesync.TaskDetailActivity
 import com.example.timesync.adapters.TaskListAdapter
 import com.example.timesync.databinding.FragmentSlideshowBinding
@@ -66,7 +68,10 @@ class SlideshowFragment : Fragment() {
             val editIntent = Intent(requireContext(), EditTaskActivity::class.java).apply {
                 putExtra("taskId", task.id ?: -1L)
             }
-            startActivity(editIntent)
+            val animationBundle = ActivityOptions.makeCustomAnimation(
+                requireContext(), R.anim.open_from_middle, R.anim.shrink_to_middle
+            ).toBundle()
+            startActivity(editIntent,animationBundle)
         }, { task ->
             val intent = Intent(requireContext(), TaskDetailActivity::class.java)
             intent.putExtra("TASK_ID", task.id)

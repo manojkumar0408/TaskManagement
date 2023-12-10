@@ -1,6 +1,7 @@
 package com.example.timesync.ui.home
 
 import android.Manifest
+import android.app.ActivityOptions
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -20,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timesync.AddNewTaskActivity
 import com.example.timesync.EditTaskActivity
+import com.example.timesync.R
 import com.example.timesync.SharedPref
 import com.example.timesync.TaskDetailActivity
 import com.example.timesync.adapters.TaskListAdapter
@@ -61,11 +63,17 @@ class TaskListFragment : Fragment() {
             val editIntent = Intent(requireContext(), EditTaskActivity::class.java).apply {
                 putExtra("taskId", task.id ?: -1L)
             }
-            startActivity(editIntent)
+            val animationBundle = ActivityOptions.makeCustomAnimation(
+                requireContext(), R.anim.open_from_middle, R.anim.shrink_to_middle
+            ).toBundle()
+            startActivity(editIntent, animationBundle)
         }, { task ->
             val intent = Intent(context, TaskDetailActivity::class.java)
             intent.putExtra("TASK_ID", task.id)
-            startActivity(intent)
+            val animationBundle = ActivityOptions.makeCustomAnimation(
+                requireContext(), R.anim.open_from_middle, R.anim.shrink_to_middle
+            ).toBundle()
+            startActivity(intent, animationBundle)
         }, context)
 
 
