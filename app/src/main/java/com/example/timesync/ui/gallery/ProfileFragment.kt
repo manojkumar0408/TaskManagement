@@ -17,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -27,6 +28,7 @@ import com.example.timesync.TasksMainActivity
 import com.example.timesync.databinding.FragmentProfileBinding
 import com.example.timesync.ui.TaskActivityViewModel
 import com.example.timesync.ui.home.HomeViewModel
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -95,7 +97,18 @@ class ProfileFragment : Fragment() {
         binding.lname.setText(user.lastName)
         binding.email1.setText(user.email)
 
-        if (checkGalleryPermission()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            binding.profileIcon.setImageDrawable(resources.getDrawable(R.drawable.person))
+//            if (checkForTiramisu()) {
+//                var img = sharedPref.getImageUri(requireContext())
+//                if (img != null) {
+//                    img = Uri.parse(img.toString()).toString()
+//                    binding.profileIcon.setImageURI(Uri.parse(img))
+//                } else binding.profileIcon.setImageDrawable(resources.getDrawable(R.drawable.person))
+//            } else {
+//                Toast.makeText(context, "give permission for images", Toast.LENGTH_SHORT).show()
+//            }
+        } else if (checkGalleryPermission()) {
             var img = sharedPref.getImageUri(requireContext())
             if (img != null) {
                 img = Uri.parse(img.toString()).toString()
@@ -107,16 +120,29 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun handleCameraButtonClick() {
-        if (checkGalleryPermission()) {
-            openGallery()
+    private fun checkForTiramisu(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.READ_MEDIA_IMAGES
+            ) == PackageManager.PERMISSION_GRANTED
         } else {
-            requestGalleryPermission()
+            TODO("VERSION.SDK_INT < TIRAMISU")
+        }
+    }
+
+    private fun handleCameraButtonClick() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            onClickRequestPermission()
+        } else {
+            if (checkGalleryPermission()) {
+                openGallery()
+            } else {
+                requestGalleryPermission()
+            }
         }
     }
 
     private fun checkGalleryPermission(): Boolean {
-        Log.d("permissiom", "check Gall")
         return ContextCompat.checkSelfPermission(
             requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
@@ -178,26 +204,38 @@ class ProfileFragment : Fragment() {
         context, "Upload failed: ${string}", Toast.LENGTH_SHORT
     )
 
-    private fun uploadImage() {
-        if (filePath != null) {
-            val progressDialog = ProgressDialog(requireContext())
-            progressDialog.setTitle("Uploading...")
-            progressDialog.show()
-            val ref = storageReference!!.child("images/" + UUID.randomUUID().toString() + ".jpg")
-            Toast.makeText(context, "$ref", Toast.LENGTH_SHORT).show()
-
-            ref.putFile(filePath!!).addOnSuccessListener {
-                progressDialog.dismiss()
-                Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show()
-            }.addOnFailureListener { e ->
-                progressDialog.dismiss()
-                Toast.makeText(context, "Failed " + e.message, Toast.LENGTH_SHORT).show()
-            }.addOnProgressListener { taskSnapshot ->
-                val progress = 100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount
-                progressDialog.setMessage("Uploaded " + progress.toInt() + "%")
-            }
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            openGallery()
+        } else {
+            Toast.makeText(context, "grant the permission", Toast.LENGTH_SHORT).show()
         }
     }
 
+    private fun onClickRequestPermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.READ_MEDIA_IMAGES
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                openGallery()
+            }
+
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(), Manifest.permission.READ_MEDIA_IMAGES
+            ) -> {
+                requestPermissionLauncher.launch(
+                    Manifest.permission.READ_MEDIA_IMAGES
+                )
+            }
+
+            else -> {
+                requestPermissionLauncher.launch(
+                    Manifest.permission.READ_MEDIA_IMAGES
+                )
+            }
+        }
+    }
 
 }

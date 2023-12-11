@@ -1,8 +1,11 @@
 package com.example.timesync
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -12,8 +15,10 @@ import android.view.ViewTreeObserver
 import android.view.ViewTreeObserver.OnPreDrawListener
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
@@ -70,7 +75,12 @@ class TasksMainActivity : AppCompatActivity() {
         if (sharedPref != null) {
             name.text = "${sharedPref.firstName} ${sharedPref.lastName}"
             email.text = sharedPref.email
-            if (sharePref.getImageUri(this) != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (checkForTiramisu()) {
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.person))
+                } else {
+                }
+            } else if (sharePref.getImageUri(this) != null) {
                 var img = sharePref.getImageUri(this)
                 img = Uri.parse(img.toString()).toString()
                 imageView.setImageURI(Uri.parse(img))
@@ -90,9 +100,18 @@ class TasksMainActivity : AppCompatActivity() {
 
         homeViewModel.user_Details.observe(this) {
             Log.d("feinie", "etter")
-            if (homeViewModel.getUserDetails() != null)
-                name.text = homeViewModel.getUserDetails()
+            if (homeViewModel.getUserDetails() != null) name.text = homeViewModel.getUserDetails()
 
+        }
+    }
+
+    private fun checkForTiramisu(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                this, Manifest.permission.READ_MEDIA_IMAGES
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            TODO("VERSION.SDK_INT < TIRAMISU")
         }
     }
 
